@@ -7,6 +7,7 @@ import { OperationsPage } from '../../pages/OperationsPage';
 import { MoveHistoryPage } from '../../pages/MoveHistoryPage';
 import { SettingsPage } from '../../pages/SettingsPage';
 import { WarehouseStaffPage } from '../../pages/WarehouseStaffPage';
+import { LoginPage } from '../../pages/LoginPage';
 
 // Modals
 import { ProductModal } from '../modals/ProductModal';
@@ -17,20 +18,22 @@ import { AdjustmentModal } from '../modals/AdjustmentModal';
 import { ReplenishmentModal } from '../modals/ReplenishmentModal';
 import { BarcodeScannerModal } from '../scanner/BarcodeScannerModal';
 
-import { useRole } from '../../hooks/useRole';
+import { useAuth } from '../../hooks/useAuth';
 
 export const MainLayout = () => {
-  const { isStaff, isManager } = useRole();
+  const { user, isAuthenticated, isStaff, isManager } = useAuth();
 
   const [activePage, setActivePage] = useState('dashboard');
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  // Auto switch default view when switching role
+  // Auto redirect target users to their dedicated workspace upon login or role switch
   useEffect(() => {
-    if (isStaff && activePage === 'dashboard') {
+    if (isStaff) {
       setActivePage('staff-workstation');
+    } else if (isManager && activePage === 'staff-workstation') {
+      setActivePage('dashboard');
     }
-  }, [isStaff]);
+  }, [isStaff, isManager]);
 
   // Navigation sub-state
   const [stockInitialFilter, setStockInitialFilter] = useState('ALL');
@@ -55,6 +58,21 @@ export const MainLayout = () => {
   // Phase 2 Modals
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isReplenishmentOpen, setIsReplenishmentOpen] = useState(false);
+
+  // If user is not authenticated, show the Login / Signup / OTP Portal
+  if (!isAuthenticated) {
+    return (
+      <LoginPage
+        onLoginSuccess={(loggedInUser) => {
+          if (loggedInUser.role === 'STAFF') {
+            setActivePage('staff-workstation');
+          } else {
+            setActivePage('dashboard');
+          }
+        }}
+      />
+    );
+  }
 
   // Custom Navigation Handler
   const handleNavigate = (page, options = {}) => {

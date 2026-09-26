@@ -1,17 +1,17 @@
 import React from 'react';
+import { AuthProvider } from './context/AuthContext';
 import { InventoryProvider } from './context/InventoryContext';
 import { ToastProvider } from './context/ToastContext';
-import { RoleProvider } from './context/RoleContext';
 import { MainLayout } from './components/layout/MainLayout';
 
 function App() {
   return (
     <ToastProvider>
-      <RoleProvider>
+      <AuthProvider>
         <InventoryProvider>
           <MainLayout />
         </InventoryProvider>
-      </RoleProvider>
+      </AuthProvider>
     </ToastProvider>
   );
 }

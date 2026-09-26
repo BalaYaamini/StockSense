@@ -9,12 +9,13 @@ import {
   Sparkles,
   UserCheck,
   ShieldCheck,
+  LogOut,
   ChevronDown
 } from 'lucide-react';
 import { Button } from '../common/Button';
 import { useInventory } from '../../hooks/useInventory';
 import { useToast } from '../../hooks/useToast';
-import { useRole, ROLES } from '../../hooks/useRole';
+import { useAuth } from '../../hooks/useAuth';
 
 export const Header = ({
   activePage,
@@ -26,7 +27,7 @@ export const Header = ({
   onOpenReplenishmentModal
 }) => {
   const { warehouses, activeWarehouseId, setActiveWarehouseId, resetToMockData, summary } = useInventory();
-  const { currentRole, switchRole, isManager, isStaff, roleInfo } = useRole();
+  const { user, isManager, isStaff, logout, loginAsDemoUser } = useAuth();
   const toast = useToast();
 
   const PAGE_TITLES = {
@@ -67,13 +68,18 @@ export const Header = ({
 
   const toggleRole = () => {
     const nextRole = isManager ? 'STAFF' : 'MANAGER';
-    switchRole(nextRole);
+    const switchedUser = loginAsDemoUser(nextRole);
     toast.info(
       'Role Switched',
       nextRole === 'STAFF'
-        ? 'Switched to Dave Miller (Warehouse Staff View)'
-        : 'Switched to Alex Morgan (Inventory Manager View)'
+        ? `Switched to ${switchedUser.name} (Warehouse Staff View)`
+        : `Switched to ${switchedUser.name} (Inventory Manager View)`
     );
+  };
+
+  const handleLogout = () => {
+    logout();
+    toast.info('Logged Out', 'You have been signed out.');
   };
 
   return (
@@ -97,7 +103,7 @@ export const Header = ({
                 ? 'bg-coral-50 text-coral-700 border-coral-200'
                 : 'bg-indigo-50 text-indigo-700 border-indigo-200'
             }`}>
-              {roleInfo.badge}
+              {user?.roleTitle || (isManager ? 'Inventory Manager' : 'Warehouse Staff')}
             </span>
           </div>
           <p className="text-xs text-slate-500 hidden sm:block truncate mt-0.5">
@@ -106,7 +112,7 @@ export const Header = ({
         </div>
       </div>
 
-      {/* Right Quick Actions & Role Switcher */}
+      {/* Right Quick Actions, Role Switcher & Logout */}
       <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
         {/* Barcode Scanner Shortcut */}
         <Button
@@ -191,6 +197,15 @@ export const Header = ({
           className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-colors"
         >
           <RotateCcw className="w-4 h-4" />
+        </button>
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          title="Sign Out"
+          className="p-2 rounded-xl text-rose-500 hover:text-rose-700 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-colors"
+        >
+          <LogOut className="w-4 h-4" />
         </button>
       </div>
     </header>

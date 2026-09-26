@@ -13,10 +13,11 @@ import {
   ChevronDown,
   PackageCheck,
   ScanLine,
-  UserCheck
+  UserCheck,
+  LogOut
 } from 'lucide-react';
 import { useInventory } from '../../hooks/useInventory';
-import { useRole } from '../../hooks/useRole';
+import { useAuth } from '../../hooks/useAuth';
 
 export const Sidebar = ({
   activePage,
@@ -26,7 +27,7 @@ export const Sidebar = ({
   onOpenScanner
 }) => {
   const { summary, warehouses, activeWarehouseId, setActiveWarehouseId } = useInventory();
-  const { currentRole, switchRole, isManager, isStaff, roleInfo } = useRole();
+  const { user, isManager, isStaff, logout, loginAsDemoUser } = useAuth();
 
   const totalPendingOperations = summary.receiptsStats.pending + summary.deliveriesStats.pending;
 
@@ -165,7 +166,7 @@ export const Sidebar = ({
               <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${
                 isManager ? 'bg-coral-50 text-coral-600' : 'bg-indigo-50 text-indigo-700'
               }`}>
-                {roleInfo.badge}
+                {user?.roleTitle || (isManager ? 'Manager' : 'Staff')}
               </span>
             </div>
 
@@ -227,37 +228,39 @@ export const Sidebar = ({
           <div className="mt-auto p-3.5 mx-3 mb-2 bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-2xl shadow-sm">
             <div className="flex items-center gap-2 text-xs font-bold mb-1 text-coral-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Phase 2 Activated</span>
+              <span>Auth & Supabase Active</span>
             </div>
             <p className="text-[11px] text-slate-300 leading-snug">
-              Supabase PostgreSQL schema, Barcode Scanner & Smart POs active.
+              Role-based dashboard & OTP authentication ready.
             </p>
           </div>
         </div>
 
-        {/* User Profile & Role Switcher */}
+        {/* User Profile & Logout */}
         <div className="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/60">
           <div className="flex items-center gap-3 min-w-0">
-            <div className={`w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs flex-shrink-0 border ${roleInfo.avatarBg}`}>
-              {roleInfo.avatar}
+            <div className={`w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs flex-shrink-0 border ${
+              user?.avatarBg || 'bg-coral-100 text-coral-700 border-coral-200'
+            }`}>
+              {user?.avatar || (isManager ? 'AM' : 'DM')}
             </div>
             <div className="min-w-0">
               <p className="text-xs font-bold text-slate-900 truncate">
-                {roleInfo.name}
+                {user?.name || (isManager ? 'Alex Morgan' : 'Dave Miller')}
               </p>
               <p className="text-[10px] text-slate-500 truncate flex items-center gap-1">
                 <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                {roleInfo.roleTitle}
+                {user?.roleTitle || (isManager ? 'Inventory Manager' : 'Warehouse Staff')}
               </p>
             </div>
           </div>
 
           <button
-            onClick={() => switchRole(isManager ? 'STAFF' : 'MANAGER')}
-            title="Switch User Role"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors"
+            onClick={logout}
+            title="Sign Out"
+            className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 transition-colors"
           >
-            <UserCheck className="w-4 h-4" />
+            <LogOut className="w-4 h-4" />
           </button>
         </div>
       </aside>
