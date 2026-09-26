@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { DashboardPage } from '../../pages/DashboardPage';
+import { AdminDashboardPage } from '../../pages/AdminDashboardPage';
 import { ProductsPage } from '../../pages/ProductsPage';
 import { OperationsPage } from '../../pages/OperationsPage';
 import { MoveHistoryPage } from '../../pages/MoveHistoryPage';
 import { SettingsPage } from '../../pages/SettingsPage';
 import { WarehouseStaffPage } from '../../pages/WarehouseStaffPage';
+import { UserManagementPage } from '../../pages/UserManagementPage';
 import { LoginPage } from '../../pages/LoginPage';
 
 // Modals
@@ -17,11 +19,20 @@ import { TransferModal } from '../modals/TransferModal';
 import { AdjustmentModal } from '../modals/AdjustmentModal';
 import { ReplenishmentModal } from '../modals/ReplenishmentModal';
 import { BarcodeScannerModal } from '../scanner/BarcodeScannerModal';
+import { GooglePasswordSetupModal } from '../auth/GooglePasswordSetupModal';
 
 import { useAuth } from '../../hooks/useAuth';
 
 export const MainLayout = () => {
-  const { user, isAuthenticated, isStaff, isManager } = useAuth();
+  const {
+    user,
+    isAuthenticated,
+    isAdmin,
+    isStaff,
+    isManager,
+    googleUserForPasswordSetup,
+    clearGooglePasswordSetup
+  } = useAuth();
 
   const [activePage, setActivePage] = useState('dashboard');
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -30,10 +41,12 @@ export const MainLayout = () => {
   useEffect(() => {
     if (isStaff) {
       setActivePage('staff-workstation');
+    } else if (isAdmin && activePage === 'staff-workstation') {
+      setActivePage('dashboard');
     } else if (isManager && activePage === 'staff-workstation') {
       setActivePage('dashboard');
     }
-  }, [isStaff, isManager]);
+  }, [isStaff, isAdmin, isManager]);
 
   // Navigation sub-state
   const [stockInitialFilter, setStockInitialFilter] = useState('ALL');
@@ -152,17 +165,23 @@ export const MainLayout = () => {
         {/* Dynamic Page Rendering */}
         <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">
           {activePage === 'dashboard' && (
-            <DashboardPage
-              onNavigate={handleNavigate}
-              onOpenProductModal={handleOpenProductModal}
-              onOpenReceiptModal={handleOpenReceiptModal}
-              onOpenDeliveryModal={handleOpenDeliveryModal}
-              onOpenTransferModal={handleOpenTransferModal}
-              onOpenAdjustmentModal={handleOpenAdjustmentModal}
-              onOpenReplenishmentModal={() => setIsReplenishmentOpen(true)}
-              onOpenScanner={() => setIsScannerOpen(true)}
-            />
+            isAdmin ? (
+              <AdminDashboardPage onNavigate={handleNavigate} />
+            ) : (
+              <DashboardPage
+                onNavigate={handleNavigate}
+                onOpenProductModal={handleOpenProductModal}
+                onOpenReceiptModal={handleOpenReceiptModal}
+                onOpenDeliveryModal={handleOpenDeliveryModal}
+                onOpenTransferModal={handleOpenTransferModal}
+                onOpenAdjustmentModal={handleOpenAdjustmentModal}
+                onOpenReplenishmentModal={() => setIsReplenishmentOpen(true)}
+                onOpenScanner={() => setIsScannerOpen(true)}
+              />
+            )
           )}
+
+          {activePage === 'user-management' && <UserManagementPage />}
 
           {activePage === 'stock' && (
             <ProductsPage
@@ -246,6 +265,13 @@ export const MainLayout = () => {
           setActivePage('operations');
           setOperationsInitialTab('receipts');
         }}
+      />
+
+      {/* Google OAuth Password Setup / Reset Modal */}
+      <GooglePasswordSetupModal
+        isOpen={!!googleUserForPasswordSetup}
+        onClose={clearGooglePasswordSetup}
+        googleUser={googleUserForPasswordSetup}
       />
     </div>
   );

@@ -10,7 +10,8 @@ import {
   UserCheck,
   ShieldCheck,
   LogOut,
-  ChevronDown
+  Crown,
+  Users
 } from 'lucide-react';
 import { Button } from '../common/Button';
 import { useInventory } from '../../hooks/useInventory';
@@ -27,13 +28,17 @@ export const Header = ({
   onOpenReplenishmentModal
 }) => {
   const { warehouses, activeWarehouseId, setActiveWarehouseId, resetToMockData, summary } = useInventory();
-  const { user, isManager, isStaff, logout, loginAsDemoUser } = useAuth();
+  const { user, isAdmin, isManager, isStaff, logout, loginAsDemoUser } = useAuth();
   const toast = useToast();
 
   const PAGE_TITLES = {
     dashboard: {
       title: 'Dashboard Overview',
       subtitle: 'Real-time inventory metrics, pending operations, and stock health'
+    },
+    'user-management': {
+      title: 'User & Manager Governance Hub',
+      subtitle: 'Provision, bulk-import, and authorize Inventory Managers and view Staff directory'
     },
     stock: {
       title: 'Stock & Products Catalog',
@@ -66,14 +71,17 @@ export const Header = ({
     }
   };
 
-  const toggleRole = () => {
-    const nextRole = isManager ? 'STAFF' : 'MANAGER';
-    const switchedUser = loginAsDemoUser(nextRole);
+  // 3-Way Quick Switcher: ADMIN -> MANAGER -> STAFF -> ADMIN
+  const cycleDemoRole = () => {
+    let nextRole = 'MANAGER';
+    if (isAdmin) nextRole = 'MANAGER';
+    else if (isManager) nextRole = 'STAFF';
+    else nextRole = 'ADMIN';
+
+    const switched = loginAsDemoUser(nextRole);
     toast.info(
-      'Role Switched',
-      nextRole === 'STAFF'
-        ? `Switched to ${switchedUser.name} (Warehouse Staff View)`
-        : `Switched to ${switchedUser.name} (Inventory Manager View)`
+      'Profile Switched',
+      `Switched to ${switched.name} (${switched.roleTitle})`
     );
   };
 
@@ -99,11 +107,13 @@ export const Header = ({
               {currentInfo.title}
             </h1>
             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border hidden sm:inline-block ${
-              isManager
+              isAdmin
+                ? 'bg-rose-50 text-rose-700 border-rose-200'
+                : isManager
                 ? 'bg-coral-50 text-coral-700 border-coral-200'
                 : 'bg-indigo-50 text-indigo-700 border-indigo-200'
             }`}>
-              {user?.roleTitle || (isManager ? 'Inventory Manager' : 'Warehouse Staff')}
+              {user?.badge || (isAdmin ? '👑 Admin' : isManager ? '👔 Manager' : '👷 Staff')}
             </span>
           </div>
           <p className="text-xs text-slate-500 hidden sm:block truncate mt-0.5">
@@ -126,8 +136,8 @@ export const Header = ({
           <span className="hidden md:inline">Scanner</span>
         </Button>
 
-        {/* Smart Restock PO Trigger (Manager) */}
-        {isManager && summary.lowStockCount > 0 && (
+        {/* Smart Restock PO Trigger (Admin / Manager) */}
+        {(isAdmin || isManager) && summary.lowStockCount > 0 && (
           <Button
             variant="secondary"
             size="sm"
@@ -139,8 +149,8 @@ export const Header = ({
           </Button>
         )}
 
-        {/* Quick Add Buttons for Manager */}
-        {isManager && (
+        {/* Quick Add Buttons for Admin/Manager */}
+        {(isAdmin || isManager) && (
           <>
             <Button
               variant="secondary"
@@ -175,19 +185,25 @@ export const Header = ({
           </>
         )}
 
-        {/* Interactive Role Switcher Pill */}
+        {/* 3-Profile Cycle Switcher Button */}
         <button
-          onClick={toggleRole}
-          title="Click to Switch Role (Manager ↔ Staff)"
-          className={`px-3 py-1.5 rounded-xl border flex items-center gap-2 text-xs font-bold transition-all ${
-            isManager
-              ? 'bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300/80'
+          onClick={cycleDemoRole}
+          title="Switch Profile (Admin ↔ Manager ↔ Staff)"
+          className={`px-3 py-1.5 rounded-xl border flex items-center gap-1.5 text-xs font-bold transition-all ${
+            isAdmin
+              ? 'bg-rose-50 hover:bg-rose-100 text-rose-800 border-rose-200 shadow-xs'
+              : isManager
+              ? 'bg-coral-50 hover:bg-coral-100 text-coral-800 border-coral-200 shadow-xs'
               : 'bg-indigo-600 hover:bg-indigo-700 text-white border-transparent shadow-xs'
           }`}
         >
           <UserCheck className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">{isManager ? 'Switch to Staff' : 'Switch to Manager'}</span>
-          <span className="sm:hidden">{isManager ? 'Staff' : 'Mgr'}</span>
+          <span className="hidden sm:inline">
+            {isAdmin ? '👑 Admin (Sarah)' : isManager ? '👔 Manager (Alex)' : '👷 Staff (Dave)'}
+          </span>
+          <span className="sm:hidden">
+            {isAdmin ? 'Admin' : isManager ? 'Mgr' : 'Staff'}
+          </span>
         </button>
 
         {/* Demo Data Reset Trigger */}

@@ -15,7 +15,14 @@ import {
   AlertCircle,
   ExternalLink,
   Copy,
-  Link2
+  Link2,
+  KeyRound,
+  Mail,
+  Send,
+  HelpCircle,
+  Lock,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { Card, CardHeader } from '../components/common/Card';
 import { Button } from '../components/common/Button';
@@ -23,7 +30,9 @@ import { Input } from '../components/common/Input';
 import { Badge } from '../components/common/Badge';
 import { WarehouseModal } from '../components/modals/WarehouseModal';
 import { ConfirmModal } from '../components/modals/ConfirmModal';
+import { OTPPasswordResetModal } from '../components/auth/OTPPasswordResetModal';
 import { useInventory } from '../hooks/useInventory';
+import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
 import {
   getSupabaseConfig,
@@ -31,19 +40,34 @@ import {
   testSupabaseConnection,
   resetSupabaseClient
 } from '../services/supabaseClient';
+import {
+  getEmailConfig,
+  saveEmailConfig,
+  testSmtpConnection
+} from '../services/emailService';
 
 export const SettingsPage = () => {
   const { warehouses, resetToMockData, products, moveHistory, receipts, deliveries } = useInventory();
+  const { user } = useAuth();
   const toast = useToast();
 
   const [isWarehouseModalOpen, setIsWarehouseModalOpen] = useState(false);
   const [editingWarehouse, setEditingWarehouse] = useState(null);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
+  const [isOtpResetOpen, setIsOtpResetOpen] = useState(false);
 
   // Supabase Configuration State
   const [supabaseConfig, setSupabaseConfig] = useState(getSupabaseConfig());
   const [isTestingConn, setIsTestingConn] = useState(false);
   const [connTestResult, setConnTestResult] = useState(null);
+
+  // Email / SMTP App Password State
+  const [emailConfig, setEmailConfig] = useState(getEmailConfig());
+  const [isTestingEmail, setIsTestingEmail] = useState(false);
+  const [emailTestResult, setEmailTestResult] = useState(null);
+  const [showAppPass, setShowAppPass] = useState(false);
+  const [showSetupGuide, setShowSetupGuide] = useState(false);
+  const [testRecipientEmail, setTestRecipientEmail] = useState('');
 
   const handleEdit = (wh) => {
     setEditingWarehouse(wh);
@@ -82,6 +106,36 @@ export const SettingsPage = () => {
       'Settings Saved',
       supabaseConfig.isEnabled ? 'Supabase PostgreSQL sync enabled!' : 'Using Local Storage Mode.'
     );
+  };
+
+  const handleSaveEmailConfig = (e) => {
+    e.preventDefault();
+    saveEmailConfig(emailConfig);
+    toast.success(
+      'Email Config Saved',
+      emailConfig.senderEmail ? `Email dispatch configured for ${emailConfig.senderEmail}` : 'Email config updated.'
+    );
+  };
+
+  const handleTestEmail = async () => {
+    setIsTestingEmail(true);
+    setEmailTestResult(null);
+
+    const recipient = testRecipientEmail.trim() || emailConfig.senderEmail || user?.email;
+    const res = await testSmtpConnection({
+      senderEmail: emailConfig.senderEmail,
+      appPassword: emailConfig.appPassword,
+      testRecipient: recipient
+    });
+
+    setIsTestingEmail(false);
+    setEmailTestResult(res);
+
+    if (res.success) {
+      toast.success('Test Email Sent', res.message);
+    } else {
+      toast.error('SMTP Connection Failed', res.message);
+    }
   };
 
   return (
@@ -281,7 +335,188 @@ export const SettingsPage = () => {
         </form>
       </Card>
 
-      {/* 3. Database Sandbox & Reset */}
+      {/* 3. Email Dispatch & Gmail App Password Configuration */}
+      <Card>
+        <CardHeader
+          title="Email Service Configuration (Gmail App Password)"
+          subtitle="Configure Gmail SMTP and App Password to deliver real 6-digit OTP emails to users"
+          icon={Mail}
+          action={
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${
+                emailConfig.senderEmail && emailConfig.appPassword
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  : 'bg-amber-50 text-amber-700 border-amber-200'
+              }`}>
+                {emailConfig.senderEmail && emailConfig.appPassword ? '● Live Email Active' : '○ Simulated Mode'}
+              </span>
+            </div>
+          }
+        />
+
+        <form onSubmit={handleSaveEmailConfig} className="space-y-4 text-xs">
+          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/60 pb-3">
+              <div>
+                <p className="font-bold text-slate-800 text-sm">Gmail SMTP Dispatcher</p>
+                <p className="text-[11px] text-slate-500">
+                  Sends automated password reset OTP emails using Google's secure 16-character App Password.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowSetupGuide(!showSetupGuide)}
+                className="text-xs font-bold text-coral-600 hover:text-coral-700 flex items-center gap-1 self-start sm:self-auto cursor-pointer"
+              >
+                <HelpCircle className="w-3.5 h-3.5" />
+                <span>{showSetupGuide ? 'Hide Setup Guide' : 'How to get App Password?'}</span>
+              </button>
+            </div>
+
+            {/* Expandable Google App Password Step-by-Step Guide */}
+            {showSetupGuide && (
+              <div className="p-3.5 bg-coral-50/70 border border-coral-200/70 rounded-xl space-y-2 text-slate-700 animate-fade-in">
+                <p className="font-bold text-coral-900 text-xs flex items-center gap-1.5">
+                  <Mail className="w-4 h-4 text-coral-600" />
+                  <span>How to generate a free Gmail 16-character App Password (30 seconds):</span>
+                </p>
+                <ol className="list-decimal list-inside space-y-1 text-[11px] text-slate-700 pl-1 leading-relaxed">
+                  <li>Visit your Google Account at <a href="https://myaccount.google.com/security" target="_blank" rel="noreferrer" className="font-bold text-coral-600 underline">myaccount.google.com/security</a>.</li>
+                  <li>Enable <strong>2-Step Verification</strong> (if not already turned on).</li>
+                  <li>Go to <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noreferrer" className="font-bold text-coral-600 underline">myaccount.google.com/apppasswords</a>.</li>
+                  <li>Enter app name (e.g. <code>StockSense</code>) and click <strong>Create</strong>.</li>
+                  <li>Copy the generated <strong>16-character code</strong> (e.g. <code>abcd efgh ijkl mnop</code>) and paste it below!</li>
+                </ol>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <Input
+                  label="Sender Gmail Address"
+                  type="email"
+                  placeholder="your-account@gmail.com"
+                  icon={Mail}
+                  value={emailConfig.senderEmail}
+                  onChange={(e) => setEmailConfig(prev => ({ ...prev, senderEmail: e.target.value.trim() }))}
+                  required
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                    16-Character Google App Password
+                  </label>
+                </div>
+                <div className="relative">
+                  <Input
+                    type={showAppPass ? 'text' : 'password'}
+                    placeholder="xxxx xxxx xxxx xxxx"
+                    icon={Lock}
+                    value={emailConfig.appPassword}
+                    onChange={(e) => setEmailConfig(prev => ({ ...prev, appPassword: e.target.value.trim() }))}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowAppPass(!showAppPass)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                  >
+                    {showAppPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Test Email Delivery Row */}
+            <div className="pt-2 border-t border-slate-200/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2 max-w-sm w-full">
+                <input
+                  type="email"
+                  placeholder={`Send test to: ${emailConfig.senderEmail || user?.email || 'email@domain.com'}`}
+                  value={testRecipientEmail}
+                  onChange={(e) => setTestRecipientEmail(e.target.value)}
+                  className="text-xs px-3 py-1.5 rounded-xl border border-slate-200 bg-white w-full focus:outline-none focus:ring-1 focus:ring-coral-500"
+                />
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  icon={Send}
+                  loading={isTestingEmail}
+                  disabled={!emailConfig.senderEmail || !emailConfig.appPassword}
+                  onClick={handleTestEmail}
+                  className="flex-shrink-0 text-xs"
+                >
+                  Test Delivery
+                </Button>
+              </div>
+
+              {emailTestResult && (
+                <span className={`text-xs font-semibold flex items-center gap-1.5 ${
+                  emailTestResult.success ? 'text-emerald-700' : 'text-rose-700'
+                }`}>
+                  {emailTestResult.success ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+                  <span className="truncate max-w-xs">{emailTestResult.message}</span>
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between pt-1">
+            <p className="text-slate-500">
+              Credentials can also be stored in <code className="font-mono bg-slate-100 px-1 py-0.5 rounded">.env</code> as <code>VITE_GMAIL_USER</code> and <code>VITE_GMAIL_APP_PASSWORD</code>.
+            </p>
+            <Button type="submit" variant="primary" size="sm">
+              Save Email Credentials
+            </Button>
+          </div>
+        </form>
+      </Card>
+
+      {/* 4. Account Security & OTP Password Reset */}
+      <Card>
+        <CardHeader
+          title="Account Security & Password Management"
+          subtitle="Reset or update your account password using secure 6-digit OTP verification"
+          icon={KeyRound}
+          action={
+            <Button
+              variant="primary"
+              size="sm"
+              icon={KeyRound}
+              onClick={() => setIsOtpResetOpen(true)}
+              className="coral-glow text-xs font-bold"
+            >
+              Reset Password via OTP
+            </Button>
+          }
+        />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200/80 text-xs">
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-full font-bold flex items-center justify-center text-sm border flex-shrink-0 ${
+              user?.avatarBg || 'bg-slate-100 text-slate-700'
+            }`}>
+              {user?.avatar || 'US'}
+            </div>
+            <div>
+              <p className="font-bold text-slate-900 text-sm">{user?.name || 'StockSense User'}</p>
+              <p className="text-slate-500 font-mono text-xs">{user?.email}</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-slate-500 text-xs">Active Profile:</span>
+            <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200/80 text-slate-800">
+              {user?.badge || user?.role || 'Staff'}
+            </span>
+          </div>
+        </div>
+      </Card>
+
+      {/* 4. Database Sandbox & Reset */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader
@@ -358,6 +593,14 @@ export const SettingsPage = () => {
         message="This will reset all products, receipts, deliveries, and move history back to initial factory demo seed. Any custom edits will be discarded."
         confirmText="Reset to Seed Data"
         variant="danger"
+      />
+
+      {/* OTP Password Reset Modal */}
+      <OTPPasswordResetModal
+        isOpen={isOtpResetOpen}
+        onClose={() => setIsOtpResetOpen(false)}
+        targetEmail={user?.email}
+        targetUser={user}
       />
     </div>
   );

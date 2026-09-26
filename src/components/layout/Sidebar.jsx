@@ -14,7 +14,9 @@ import {
   PackageCheck,
   ScanLine,
   UserCheck,
-  LogOut
+  Users,
+  LogOut,
+  Crown
 } from 'lucide-react';
 import { useInventory } from '../../hooks/useInventory';
 import { useAuth } from '../../hooks/useAuth';
@@ -27,11 +29,57 @@ export const Sidebar = ({
   onOpenScanner
 }) => {
   const { summary, warehouses, activeWarehouseId, setActiveWarehouseId } = useInventory();
-  const { user, isManager, isStaff, logout, loginAsDemoUser } = useAuth();
+  const { user, isAdmin, isManager, isStaff, logout, loginAsDemoUser, allRoles } = useAuth();
 
   const totalPendingOperations = summary.receiptsStats.pending + summary.deliveriesStats.pending;
 
-  // Navigation Items depending on active role
+  // 1. ADMIN Navigation (Full Governance + Manager Provisioning)
+  const ADMIN_NAV = [
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: LayoutDashboard,
+      badge: null
+    },
+    {
+      id: 'user-management',
+      label: 'User & Manager Hub',
+      icon: Users,
+      badge: { text: 'Admin', color: 'bg-rose-100 text-rose-800' }
+    },
+    {
+      id: 'stock',
+      label: 'Products / Stock',
+      icon: Package,
+      badge: summary.lowStockCount > 0 ? { text: `${summary.lowStockCount} Low`, color: 'bg-amber-100 text-amber-800' } : null
+    },
+    {
+      id: 'operations',
+      label: 'Operations',
+      icon: Layers,
+      badge: totalPendingOperations > 0 ? { text: totalPendingOperations, color: 'bg-coral-500 text-white' } : null
+    },
+    {
+      id: 'staff-workstation',
+      label: 'Staff Floor View',
+      icon: PackageCheck,
+      badge: { text: 'Floor', color: 'bg-indigo-100 text-indigo-800' }
+    },
+    {
+      id: 'move-history',
+      label: 'Move History',
+      icon: History,
+      badge: null
+    },
+    {
+      id: 'settings',
+      label: 'Settings & Cloud',
+      icon: Settings,
+      badge: null
+    }
+  ];
+
+  // 2. MANAGER Navigation
   const MANAGER_NAV = [
     {
       id: 'dashboard',
@@ -71,6 +119,7 @@ export const Sidebar = ({
     }
   ];
 
+  // 3. STAFF Navigation (Google users & Floor staff)
   const STAFF_NAV = [
     {
       id: 'staff-workstation',
@@ -92,7 +141,7 @@ export const Sidebar = ({
     }
   ];
 
-  const navItems = isManager ? MANAGER_NAV : STAFF_NAV;
+  const navItems = isAdmin ? ADMIN_NAV : isManager ? MANAGER_NAV : STAFF_NAV;
 
   return (
     <>
@@ -123,7 +172,7 @@ export const Sidebar = ({
                     Stock<span className="text-coral-500">Sense</span>
                   </span>
                   <span className="text-[10px] font-bold px-1.5 py-0.2 bg-coral-50 text-coral-600 rounded border border-coral-200/50 uppercase tracking-widest">
-                    v2.0
+                    v2.5
                   </span>
                 </div>
                 <p className="text-[10px] text-slate-400 font-medium tracking-wide">
@@ -161,12 +210,16 @@ export const Sidebar = ({
           <div className="p-3 space-y-1">
             <div className="flex items-center justify-between px-3 py-1.5">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                {isManager ? 'Manager Menu' : 'Staff Workstation'}
+                {isAdmin ? 'Admin Portal' : isManager ? 'Manager Menu' : 'Staff Workstation'}
               </span>
-              <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${
-                isManager ? 'bg-coral-50 text-coral-600' : 'bg-indigo-50 text-indigo-700'
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                isAdmin
+                  ? 'bg-rose-50 text-rose-700 border-rose-200'
+                  : isManager
+                  ? 'bg-coral-50 text-coral-600 border-coral-200'
+                  : 'bg-indigo-50 text-indigo-700 border-indigo-200'
               }`}>
-                {user?.roleTitle || (isManager ? 'Manager' : 'Staff')}
+                {user?.badge || (isAdmin ? '👑 Admin' : isManager ? '👔 Manager' : '👷 Staff')}
               </span>
             </div>
 
@@ -183,7 +236,9 @@ export const Sidebar = ({
                   }}
                   className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group select-none ${
                     isActive
-                      ? isStaff
+                      ? isAdmin && item.id === 'user-management'
+                        ? 'bg-rose-50 text-rose-700 shadow-xs font-bold'
+                        : isStaff
                         ? 'bg-indigo-50 text-indigo-700 shadow-xs'
                         : 'bg-coral-50 text-coral-600 shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -193,7 +248,9 @@ export const Sidebar = ({
                     <Icon
                       className={`w-4 h-4 transition-colors ${
                         isActive
-                          ? isStaff ? 'text-indigo-600' : 'text-coral-600'
+                          ? isAdmin && item.id === 'user-management'
+                            ? 'text-rose-600'
+                            : isStaff ? 'text-indigo-600' : 'text-coral-600'
                           : 'text-slate-400 group-hover:text-slate-600'
                       }`}
                     />
@@ -224,14 +281,14 @@ export const Sidebar = ({
             </button>
           </div>
 
-          {/* Phase 2 Ready Status Box */}
+          {/* Phase 2 Auth Status Banner */}
           <div className="mt-auto p-3.5 mx-3 mb-2 bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-2xl shadow-sm">
             <div className="flex items-center gap-2 text-xs font-bold mb-1 text-coral-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Auth & Supabase Active</span>
+              <span>Google & Supabase Auth</span>
             </div>
             <p className="text-[11px] text-slate-300 leading-snug">
-              Role-based dashboard & OTP authentication ready.
+              Admin Governance & Staff Google OAuth active.
             </p>
           </div>
         </div>
@@ -240,17 +297,17 @@ export const Sidebar = ({
         <div className="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/60">
           <div className="flex items-center gap-3 min-w-0">
             <div className={`w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs flex-shrink-0 border ${
-              user?.avatarBg || 'bg-coral-100 text-coral-700 border-coral-200'
+              user?.avatarBg || 'bg-rose-100 text-rose-700 border-rose-200'
             }`}>
-              {user?.avatar || (isManager ? 'AM' : 'DM')}
+              {user?.avatar || (isAdmin ? 'SV' : isManager ? 'AM' : 'DM')}
             </div>
             <div className="min-w-0">
               <p className="text-xs font-bold text-slate-900 truncate">
-                {user?.name || (isManager ? 'Alex Morgan' : 'Dave Miller')}
+                {user?.name || 'Administrator'}
               </p>
               <p className="text-[10px] text-slate-500 truncate flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                {user?.roleTitle || (isManager ? 'Inventory Manager' : 'Warehouse Staff')}
+                {isAdmin ? <Crown className="w-3 h-3 text-amber-500" /> : <ShieldCheck className="w-3 h-3 text-emerald-600" />}
+                {user?.roleTitle || (isAdmin ? 'System Administrator' : isManager ? 'Inventory Manager' : 'Warehouse Staff')}
               </p>
             </div>
           </div>

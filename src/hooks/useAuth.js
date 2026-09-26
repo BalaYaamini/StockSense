@@ -1,1 +1,1 @@
-export { useAuth, DEMO_ACCOUNTS } from '../context/AuthContext';
+export { useAuth, ROLES } from '../context/AuthContext';
