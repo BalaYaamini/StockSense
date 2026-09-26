@@ -161,26 +161,16 @@ export const Sidebar = ({
       >
         <div className="flex flex-col flex-1 overflow-y-auto">
           {/* Brand Logo Header */}
-          <div className="h-16 flex items-center justify-between px-6 border-b border-slate-100 dark:border-[#2a2a2a]">
+          <div className="h-16 flex items-center px-5 border-b border-slate-100 dark:border-[#2a2a2a]">
             <div className="flex items-center gap-3">
               <img
                 src="/logo.png"
                 alt="StockSense Logo"
-                className="w-9 h-9 rounded-xl object-contain shadow-xs border border-slate-200/60 dark:border-slate-700/60 bg-white"
+                className="w-10 h-10 rounded-xl object-contain shadow-xs border border-slate-200/60 dark:border-slate-700/60 bg-white p-0.5"
               />
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-white">
-                    Stock<span className="text-coral-500">Sense</span>
-                  </span>
-                  <span className="text-[10px] font-bold px-1.5 py-0.2 bg-coral-50 text-coral-600 dark:bg-coral-950/40 dark:text-coral-400 rounded border border-coral-200/50 uppercase tracking-widest">
-                    v2.5
-                  </span>
-                </div>
-                <p className="text-[10px] text-slate-400 font-medium tracking-wide">
-                  Modular Inventory System
-                </p>
-              </div>
+              <span className="font-black text-xl tracking-tight text-slate-900 dark:text-white leading-none">
+                Stock<span className="text-coral-500">Sense</span>
+              </span>
             </div>
           </div>
 

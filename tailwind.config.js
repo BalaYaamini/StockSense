@@ -30,8 +30,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Antic', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        serif: ['Signifier', 'Georgia', 'serif'],
+        sans: ['"Times New Roman"', 'Times', 'serif'],
+        serif: ['"Times New Roman"', 'Times', 'serif'],
         mono: ['JetBrains Mono', 'Courier New', 'monospace'],
       },
       boxShadow: {

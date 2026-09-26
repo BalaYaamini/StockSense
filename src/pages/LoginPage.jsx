@@ -307,7 +307,7 @@ export const LoginPage = ({ onLoginSuccess }) => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4">
         {/* Brand Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex w-16 h-16 rounded-2xl items-center justify-center mb-3 shadow-md border border-slate-200/80 bg-white p-1.5">
+          <div className="inline-flex w-20 h-20 rounded-2xl items-center justify-center mb-3.5 shadow-sm border border-slate-200/80 bg-white p-2">
             <img
               src="/logo.png"
               alt="StockSense Logo"
@@ -386,7 +386,7 @@ export const LoginPage = ({ onLoginSuccess }) => {
                         setErrorMessage('');
                         setAuthMode('forgot_otp_step1');
                       }}
-                      className="text-xs font-semibold text-coral-600 hover:text-coral-700"
+                      className="text-xs font-semibold text-coral-600 hover:text-coral-700 cursor-pointer"
                     >
                       Forgot Password?
                     </button>
@@ -399,12 +399,13 @@ export const LoginPage = ({ onLoginSuccess }) => {
                       icon={Lock}
                       value={formData.password}
                       onChange={handleChange}
+                      className="pr-10"
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -719,12 +720,13 @@ export const LoginPage = ({ onLoginSuccess }) => {
                     icon={Lock}
                     value={formData.newPassword}
                     onChange={handleChange}
+                    className="pr-10"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
                   >
                     {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -766,12 +768,13 @@ export const LoginPage = ({ onLoginSuccess }) => {
                     icon={Lock}
                     value={formData.confirmPassword}
                     onChange={handleChange}
+                    className="pr-10"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
                   >
                     {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>

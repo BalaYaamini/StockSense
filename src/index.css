@@ -45,9 +45,9 @@
 
   body {
     @apply antialiased;
+    font-family: 'Times New Roman', Times, serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 
