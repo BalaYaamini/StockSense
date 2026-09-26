@@ -11,7 +11,7 @@ const BADGE_VARIANTS = {
   READY: 'bg-blue-50 text-blue-700 border-blue-200/60',
   WAITING: 'bg-amber-50 text-amber-700 border-amber-200/60',
   IN_TRANSIT: 'bg-indigo-50 text-indigo-700 border-indigo-200/60',
-  DRAFT: 'bg-slate-100 text-slate-700 border-slate-200',
+  DRAFT: 'bg-slate-100 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]',
   CANCELLED: 'bg-rose-50 text-rose-700 border-rose-200/60',
 
   // Movement Types
@@ -22,8 +22,8 @@ const BADGE_VARIANTS = {
   INITIAL: 'bg-teal-50 text-teal-700 border-teal-200/60',
 
   // Default variants
-  primary: 'bg-coral-50 text-coral-700 border-coral-200/60',
-  secondary: 'bg-slate-100 text-slate-700 border-slate-200',
+  primary: 'bg-sage-50 text-sage-700 border-sage-200/60',
+  secondary: 'bg-slate-100 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]',
   success: 'bg-emerald-50 text-emerald-700 border-emerald-200/60',
   warning: 'bg-amber-50 text-amber-700 border-amber-200/60',
   danger: 'bg-rose-50 text-rose-700 border-rose-200/60',

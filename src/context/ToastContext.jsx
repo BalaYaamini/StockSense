@@ -41,12 +41,12 @@ export const ToastProvider = ({ children }) => {
             key={t.id}
             className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-lg backdrop-blur-md transition-all duration-300 transform translate-y-0 animate-fade-in ${
               t.type === 'success'
-                ? 'bg-emerald-50/95 border-emerald-200 text-emerald-900'
+                ? 'bg-emerald-50/95 dark:bg-emerald-950/90 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
                 : t.type === 'error'
-                ? 'bg-rose-50/95 border-rose-200 text-rose-900'
+                ? 'bg-rose-50/95 dark:bg-rose-950/90 border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200'
                 : t.type === 'warning'
-                ? 'bg-amber-50/95 border-amber-200 text-amber-900'
-                : 'bg-slate-900/95 border-slate-700 text-white'
+                ? 'bg-amber-50/95 dark:bg-amber-950/90 border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200'
+                : 'bg-slate-900/95 dark:bg-[#1a1a1a]/95 border-slate-700 dark:border-[#2a2a2a] text-white'
             }`}
           >
             <div className="flex-shrink-0 mt-0.5">

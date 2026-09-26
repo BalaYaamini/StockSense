@@ -3,12 +3,64 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-slate-50 text-slate-900 antialiased selection:bg-coral-100 selection:text-coral-900;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  :root {
+    --bg-primary: #f8f7f4;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f1f0ec;
+    --text-primary: #1a1f2e;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --border-color: #e8e6e1;
+    --border-light: #f1f0ec;
+    --sage-50: #f0f3f1;
+    --sage-100: #dce3de;
+    --sage-200: #c5d1c8;
+    --sage-500: #7c9082;
+    --sage-600: #6a7d6f;
+    --sage-700: #566559;
+    --overlay: rgba(26, 31, 46, 0.6);
+    --scrollbar: #ced4bf;
+    --scrollbar-hover: #a8b9ad;
   }
 
-  /* Custom scrollbar */
+  .dark {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #121212;
+    --bg-tertiary: #1a1a1a;
+    --text-primary: #f5f5f5;
+    --text-secondary: #a0a0a0;
+    --text-muted: #6b7280;
+    --border-color: #2a2a2a;
+    --border-light: #1a1a1a;
+    --sage-50: #1a2e20;
+    --sage-100: #1f3826;
+    --sage-200: #2a4a33;
+    --sage-500: #7c9082;
+    --sage-600: #8fa596;
+    --sage-700: #a8b9ad;
+    --overlay: rgba(0, 0, 0, 0.7);
+    --scrollbar: #2a2a2a;
+    --scrollbar-hover: #3a3a3a;
+  }
+
+  body {
+    @apply antialiased;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  ::selection {
+    background-color: var(--sage-200);
+    color: var(--sage-700);
+  }
+
+  .dark ::selection {
+    background-color: var(--sage-200);
+    color: #ffffff;
+  }
+
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -17,21 +69,32 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 rounded-full hover:bg-slate-400 transition-colors;
+    @apply rounded-full transition-colors;
+    background-color: var(--scrollbar);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-hover);
   }
 }
 
 @layer components {
   .card-gradient {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 247, 244, 0.8) 100%);
   }
   
-  .coral-glow {
-    box-shadow: 0 4px 20px -2px rgba(240, 68, 56, 0.25);
+  .dark .card-gradient {
+    background: linear-gradient(135deg, rgba(18, 18, 18, 0.9) 0%, rgba(10, 10, 10, 0.8) 100%);
+  }
+
+  .sage-glow {
+    box-shadow: 0 4px 20px -2px rgba(124, 144, 130, 0.25);
+  }
+
+  .dark .sage-glow {
+    box-shadow: 0 4px 20px -2px rgba(124, 144, 130, 0.15);
   }
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;

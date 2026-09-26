@@ -222,26 +222,26 @@ export const ReceiptModal = ({
         </div>
 
         {/* Immediate validation checkbox */}
-        <div className="p-3.5 bg-coral-50/50 rounded-xl border border-coral-100 flex items-center justify-between">
+        <div className="p-3.5 bg-sage-50/50 dark:bg-[#1a1a1a] rounded-xl border border-sage-100 dark:border-[#2a2a2a] flex items-center justify-between">
           <label className="flex items-center gap-2.5 cursor-pointer select-none">
             <input
               type="checkbox"
               name="validateImmediately"
               checked={formData.validateImmediately}
               onChange={handleChange}
-              className="w-4 h-4 text-coral-600 rounded border-slate-300 focus:ring-coral-500 cursor-pointer"
+              className="w-4 h-4 text-sage-600 rounded border-slate-300 focus:ring-sage-500 cursor-pointer"
             />
-            <span className="text-xs font-semibold text-slate-800">
+            <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
               Validate & increase inventory immediately
             </span>
           </label>
-          <span className="text-[11px] font-medium text-coral-700 bg-coral-100/60 px-2 py-0.5 rounded-full">
+          <span className="text-[11px] font-medium text-sage-700 bg-sage-100/60 px-2 py-0.5 rounded-full">
             Recommended
           </span>
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-[#2a2a2a]">
           <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>

@@ -130,7 +130,7 @@ export const TransferModal = ({
 
         {/* Source and Destination Warehouses */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+          <div className="p-3.5 bg-slate-50 dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#2a2a2a] rounded-xl">
             <Select
               label="Source Warehouse (From)"
               name="sourceWarehouseId"
@@ -140,15 +140,15 @@ export const TransferModal = ({
               error={errors.sourceWarehouseId}
               required
             />
-            <div className="mt-2 text-xs flex justify-between text-slate-600 font-medium">
+            <div className="mt-2 text-xs flex justify-between text-slate-600 dark:text-slate-300 font-medium">
               <span>Available at Source:</span>
-              <span className="font-bold text-slate-900">
+              <span className="font-bold text-slate-900 dark:text-white">
                 {sourceAvailable} {selectedProduct?.unit || 'Units'}
               </span>
             </div>
           </div>
 
-          <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+          <div className="p-3.5 bg-slate-50 dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#2a2a2a] rounded-xl">
             <Select
               label="Destination Warehouse (To)"
               name="destWarehouseId"
@@ -158,9 +158,9 @@ export const TransferModal = ({
               error={errors.destWarehouseId}
               required
             />
-            <div className="mt-2 text-xs flex justify-between text-slate-600 font-medium">
+            <div className="mt-2 text-xs flex justify-between text-slate-600 dark:text-slate-300 font-medium">
               <span>Current at Destination:</span>
-              <span className="font-bold text-slate-900">
+              <span className="font-bold text-slate-900 dark:text-white">
                 {destCurrent} {selectedProduct?.unit || 'Units'}
               </span>
             </div>
@@ -217,7 +217,7 @@ export const TransferModal = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-[#2a2a2a]">
           <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>
