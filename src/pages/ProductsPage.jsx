@@ -85,15 +85,15 @@ export const ProductsPage = ({
       key: 'name',
       render: (val, row) => (
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-xs flex-shrink-0 border border-slate-200">
+          <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-[#1a1a1a] flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xs flex-shrink-0 border border-slate-200 dark:border-[#2a2a2a]">
             {row.category.slice(0, 2).toUpperCase()}
           </div>
           <div className="min-w-0">
-            <p className="font-bold text-slate-900 leading-snug">{row.name}</p>
+            <p className="font-bold text-slate-900 dark:text-white leading-snug">{row.name}</p>
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="font-mono text-xs text-slate-500">{row.sku}</span>
-              <span className="text-slate-300">•</span>
-              <span className="text-xs text-slate-500">{row.category}</span>
+              <span className="font-mono text-xs text-slate-500 dark:text-slate-400">{row.sku}</span>
+              <span className="text-slate-300 dark:text-slate-600">•</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">{row.category}</span>
             </div>
           </div>
         </div>
@@ -105,12 +105,12 @@ export const ProductsPage = ({
       render: (val, row) => (
         <div>
           <div className="flex items-baseline gap-1.5">
-            <span className="text-base font-extrabold text-slate-900 font-mono">
+            <span className="text-base font-extrabold text-slate-900 dark:text-white font-mono">
               {formatNumber(val)}
             </span>
-            <span className="text-xs text-slate-500 font-medium">{row.unit}</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">{row.unit}</span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
             Min Threshold: {row.reorderLevel} {row.unit}
           </p>
         </div>
@@ -129,8 +129,8 @@ export const ProductsPage = ({
           const loc = row.stockByWarehouse?.[activeWarehouseId]?.location || 'Default';
           return (
             <div className="text-xs">
-              <span className="font-semibold text-slate-700 block">{loc}</span>
-              <span className="text-slate-400 text-[11px]">Primary Location</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300 block">{loc}</span>
+              <span className="text-slate-400 dark:text-slate-500 text-[11px]">Primary Location</span>
             </div>
           );
         }
@@ -141,10 +141,10 @@ export const ProductsPage = ({
 
         return (
           <div className="text-xs">
-            <span className="font-semibold text-slate-700 block">
+            <span className="font-semibold text-slate-700 dark:text-slate-300 block">
               {activeCount} of {warehouses.length} Warehouses
             </span>
-            <span className="text-slate-400 text-[11px]">Distributed Storage</span>
+            <span className="text-slate-400 dark:text-slate-500 text-[11px]">Distributed Storage</span>
           </div>
         );
       }
@@ -156,10 +156,10 @@ export const ProductsPage = ({
       headerAlign: 'right',
       render: (val, row) => (
         <div className="text-right">
-          <span className="font-bold text-slate-900 text-xs">
+          <span className="font-bold text-slate-900 dark:text-white text-xs">
             {formatCurrency(val)}
           </span>
-          <p className="text-[11px] text-slate-400 mt-0.5">
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
             Total: {formatCurrency(row.totalValue)}
           </p>
         </div>
@@ -175,42 +175,42 @@ export const ProductsPage = ({
           <button
             onClick={() => setBarcodeLabelProduct(row)}
             title="Print Barcode Tag"
-            className="p-1.5 text-slate-500 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-indigo-700 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 rounded-lg transition-colors"
           >
             <QrCode className="w-4 h-4" />
           </button>
           <button
             onClick={() => onOpenReceiptModal(row.id)}
             title="Receive Stock"
-            className="p-1.5 text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 rounded-lg transition-colors"
           >
             <ArrowDownRight className="w-4 h-4" />
           </button>
           <button
             onClick={() => onOpenDeliveryModal(row.id)}
             title="Dispatch Delivery"
-            className="p-1.5 text-slate-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors"
           >
             <ArrowUpRight className="w-4 h-4" />
           </button>
           <button
             onClick={() => onOpenAdjustmentModal(row.id)}
             title="Adjust Stock"
-            className="p-1.5 text-slate-500 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-colors"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-500/10 rounded-lg transition-colors"
           >
             <SlidersHorizontal className="w-4 h-4" />
           </button>
           <button
             onClick={() => onOpenProductModal(row)}
             title="Edit Product"
-            className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#1a1a1a] rounded-lg transition-colors"
           >
             <Edit2 className="w-4 h-4" />
           </button>
           <button
             onClick={() => setDeleteTargetId(row.id)}
             title="Delete Product"
-            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+            className="p-1.5 text-slate-400 dark:text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-colors"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -224,10 +224,10 @@ export const ProductsPage = ({
       {/* Top Header & Metrics Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
             Inventory Catalog ({products.length})
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Real-time physical quantities, valuations, and replenishment control
           </p>
         </div>
@@ -248,7 +248,7 @@ export const ProductsPage = ({
             variant="primary"
             icon={Plus}
             onClick={() => onOpenProductModal()}
-            className="coral-glow"
+            className="sage-glow"
           >
             Add New Product
           </Button>
@@ -256,7 +256,7 @@ export const ProductsPage = ({
       </div>
 
       {/* Filters Bar */}
-      <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-card flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+      <div className="p-4 bg-white dark:bg-[#121212] rounded-2xl border border-slate-200/80 dark:border-[#2a2a2a] shadow-card flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
         {/* Search Input */}
         <div className="flex-1 min-w-[240px]">
           <Input
@@ -306,7 +306,7 @@ export const ProductsPage = ({
                 setSelectedCategory('ALL');
                 setStatusFilter('ALL');
               }}
-              className="text-slate-500 hover:text-slate-800 text-xs"
+              className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-xs"
             >
               Reset Filters
             </Button>
