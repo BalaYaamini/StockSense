@@ -9,6 +9,8 @@ import {
   INITIAL_MOVE_HISTORY
 } from '../data/mockData';
 import { generateId } from '../utils/idGenerator';
+import { getSupabaseClient } from '../services/supabaseClient';
+import { inventoryService } from '../services/inventoryService';
 
 const STORAGE_KEYS = {
   WAREHOUSES: 'stocksense_warehouses_v1',
@@ -24,6 +26,9 @@ const STORAGE_KEYS = {
 const InventoryContext = createContext(null);
 
 export const InventoryProvider = ({ children }) => {
+  const [isSupabaseConnected, setIsSupabaseConnected] = useState(false);
+  const [isLoadingDB, setIsLoadingDB] = useState(false);
+
   // 1. Initial State from localStorage or fallback mock
   const [warehouses, setWarehouses] = useState(() => {
     try {
@@ -97,7 +102,42 @@ export const InventoryProvider = ({ children }) => {
     }
   });
 
-  // 2. Persist to localStorage whenever state updates
+  // 2. Load from Supabase on startup if configured
+  useEffect(() => {
+    const initSupabaseData = async () => {
+      const supabase = getSupabaseClient();
+      if (!supabase) {
+        setIsSupabaseConnected(false);
+        return;
+      }
+
+      setIsLoadingDB(true);
+      try {
+        const cloudData = await inventoryService.fetchAll();
+        if (cloudData) {
+          setIsSupabaseConnected(true);
+          if (cloudData.warehouses.length > 0) setWarehouses(cloudData.warehouses);
+          if (cloudData.products.length > 0) setProducts(cloudData.products);
+          if (cloudData.receipts) setReceipts(cloudData.receipts);
+          if (cloudData.deliveries) setDeliveries(cloudData.deliveries);
+          if (cloudData.transfers) setTransfers(cloudData.transfers);
+          if (cloudData.adjustments) setAdjustments(cloudData.adjustments);
+          if (cloudData.moveHistory) setMoveHistory(cloudData.moveHistory);
+        } else {
+          setIsSupabaseConnected(false);
+        }
+      } catch (err) {
+        console.warn('Supabase initial fetch failed, falling back to local data', err);
+        setIsSupabaseConnected(false);
+      } finally {
+        setIsLoadingDB(false);
+      }
+    };
+
+    initSupabaseData();
+  }, []);
+
+  // 3. Persist to localStorage whenever state updates
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEYS.WAREHOUSES, JSON.stringify(warehouses));
@@ -162,7 +202,7 @@ export const InventoryProvider = ({ children }) => {
     }
   }, [activeWarehouseId]);
 
-  // 3. Helper calculations
+  // 4. Helper calculations
   const getProductQuantity = useCallback((product, warehouseId = activeWarehouseId) => {
     if (!product || !product.stockByWarehouse) return 0;
     if (warehouseId && warehouseId !== 'ALL') {
@@ -247,7 +287,7 @@ export const InventoryProvider = ({ children }) => {
     };
   }, [enrichedProducts, receipts, deliveries, transfers, activeWarehouseId]);
 
-  // 4. CRUD & Operations logic
+  // 5. CRUD & Operations logic (Syncs to Supabase when active)
 
   // A. Product Management
   const addProduct = useCallback((productInput) => {
@@ -279,6 +319,7 @@ export const InventoryProvider = ({ children }) => {
     };
 
     setProducts((prev) => [newProduct, ...prev]);
+    inventoryService.saveProduct(newProduct);
 
     // Record Move History if initial quantity is > 0
     if (initQty > 0) {
@@ -299,6 +340,7 @@ export const InventoryProvider = ({ children }) => {
         notes: 'Initial opening stock registration'
       };
       setMoveHistory((prev) => [moveEntry, ...prev]);
+      inventoryService.saveMoveHistory(moveEntry);
     }
 
     return newProduct;
@@ -308,7 +350,7 @@ export const InventoryProvider = ({ children }) => {
     setProducts((prev) =>
       prev.map((prod) => {
         if (prod.id !== id) return prod;
-        return {
+        const updated = {
           ...prod,
           name: updatedFields.name ?? prod.name,
           sku: updatedFields.sku ? updatedFields.sku.toUpperCase() : prod.sku,
@@ -319,12 +361,15 @@ export const InventoryProvider = ({ children }) => {
           description: updatedFields.description ?? prod.description,
           supplier: updatedFields.supplier ?? prod.supplier
         };
+        inventoryService.saveProduct(updated);
+        return updated;
       })
     );
   }, []);
 
   const deleteProduct = useCallback((id) => {
     setProducts((prev) => prev.filter((p) => p.id !== id));
+    inventoryService.deleteProduct(id);
   }, []);
 
   // B. Receipts Management
@@ -352,6 +397,7 @@ export const InventoryProvider = ({ children }) => {
     };
 
     setReceipts((prev) => [newReceipt, ...prev]);
+    inventoryService.saveReceipt(newReceipt);
     return newReceipt;
   }, [receipts, products, warehouses]);
 
@@ -361,19 +407,24 @@ export const InventoryProvider = ({ children }) => {
     if (target.status === 'DONE') return { success: false, message: 'Receipt is already validated' };
 
     const qty = Number(target.quantity) || 0;
+    const completedDate = new Date().toISOString();
 
     // 1. Update product stock in that warehouse
     setProducts((prev) =>
       prev.map((prod) => {
         if (prod.id !== target.productId) return prod;
         const currentWhStock = prod.stockByWarehouse?.[target.warehouseId] || { quantity: 0, location: target.location || 'Bay 01' };
+        const newQty = (Number(currentWhStock.quantity) || 0) + qty;
+        
+        inventoryService.updateProductStock(target.productId, target.warehouseId, newQty, target.location || currentWhStock.location);
+
         return {
           ...prod,
           stockByWarehouse: {
             ...prod.stockByWarehouse,
             [target.warehouseId]: {
               ...currentWhStock,
-              quantity: (Number(currentWhStock.quantity) || 0) + qty,
+              quantity: newQty,
               location: target.location || currentWhStock.location
             }
           }
@@ -382,18 +433,16 @@ export const InventoryProvider = ({ children }) => {
     );
 
     // 2. Mark receipt as DONE
+    const updatedReceipt = { ...target, status: 'DONE', completedDate };
     setReceipts((prev) =>
-      prev.map((r) =>
-        r.id === receiptId
-          ? { ...r, status: 'DONE', completedDate: new Date().toISOString() }
-          : r
-      )
+      prev.map((r) => r.id === receiptId ? updatedReceipt : r)
     );
+    inventoryService.saveReceipt(updatedReceipt);
 
     // 3. Create Move History entry
     const moveEntry = {
       id: generateId('MOV', moveHistory),
-      date: new Date().toISOString(),
+      date: completedDate,
       type: 'RECEIPT',
       productId: target.productId,
       productName: target.productName,
@@ -407,12 +456,20 @@ export const InventoryProvider = ({ children }) => {
       notes: target.notes || 'Goods receipt verified & shelved'
     };
     setMoveHistory((prev) => [moveEntry, ...prev]);
+    inventoryService.saveMoveHistory(moveEntry);
 
     return { success: true, message: `Successfully received +${qty} ${target.unit} of ${target.productName}` };
   }, [receipts, moveHistory]);
 
   const cancelReceipt = useCallback((receiptId) => {
-    setReceipts(prev => prev.map(r => r.id === receiptId ? { ...r, status: 'CANCELLED' } : r));
+    setReceipts(prev => prev.map(r => {
+      if (r.id === receiptId) {
+        const updated = { ...r, status: 'CANCELLED' };
+        inventoryService.saveReceipt(updated);
+        return updated;
+      }
+      return r;
+    }));
   }, []);
 
   // C. Deliveries Management
@@ -439,6 +496,7 @@ export const InventoryProvider = ({ children }) => {
     };
 
     setDeliveries((prev) => [newDelivery, ...prev]);
+    inventoryService.saveDelivery(newDelivery);
     return newDelivery;
   }, [deliveries, products, warehouses]);
 
@@ -461,18 +519,24 @@ export const InventoryProvider = ({ children }) => {
       };
     }
 
+    const completedDate = new Date().toISOString();
+    const newQty = currentQty - requestedQty;
+
     // 1. Decrease product quantity in warehouse
     setProducts((prev) =>
       prev.map((p) => {
         if (p.id !== target.productId) return p;
         const currentWhStock = p.stockByWarehouse?.[target.warehouseId];
+        
+        inventoryService.updateProductStock(target.productId, target.warehouseId, newQty, currentWhStock?.location);
+
         return {
           ...p,
           stockByWarehouse: {
             ...p.stockByWarehouse,
             [target.warehouseId]: {
               ...currentWhStock,
-              quantity: currentWhStock.quantity - requestedQty
+              quantity: newQty
             }
           }
         };
@@ -480,18 +544,16 @@ export const InventoryProvider = ({ children }) => {
     );
 
     // 2. Mark delivery as DONE
+    const updatedDelivery = { ...target, status: 'DONE', completedDate };
     setDeliveries((prev) =>
-      prev.map((d) =>
-        d.id === deliveryId
-          ? { ...d, status: 'DONE', completedDate: new Date().toISOString() }
-          : d
-      )
+      prev.map((d) => d.id === deliveryId ? updatedDelivery : d)
     );
+    inventoryService.saveDelivery(updatedDelivery);
 
     // 3. Create Move History entry
     const moveEntry = {
       id: generateId('MOV', moveHistory),
-      date: new Date().toISOString(),
+      date: completedDate,
       type: 'DELIVERY',
       productId: target.productId,
       productName: target.productName,
@@ -505,12 +567,20 @@ export const InventoryProvider = ({ children }) => {
       notes: target.notes || 'Order picked, packed & dispatched'
     };
     setMoveHistory((prev) => [moveEntry, ...prev]);
+    inventoryService.saveMoveHistory(moveEntry);
 
     return { success: true, message: `Dispatched -${requestedQty} ${target.unit} of ${target.productName} to ${target.customer}` };
   }, [deliveries, products, moveHistory]);
 
   const cancelDelivery = useCallback((deliveryId) => {
-    setDeliveries(prev => prev.map(d => d.id === deliveryId ? { ...d, status: 'CANCELLED' } : d));
+    setDeliveries(prev => prev.map(d => {
+      if (d.id === deliveryId) {
+        const updated = { ...d, status: 'CANCELLED' };
+        inventoryService.saveDelivery(updated);
+        return updated;
+      }
+      return d;
+    }));
   }, []);
 
   // D. Internal Transfers Management
@@ -552,7 +622,12 @@ export const InventoryProvider = ({ children }) => {
       notes: transferInput.notes || 'Stock rebalancing between locations'
     };
 
-    // Update stock: Source -qty, Destination +qty (Total company stock remains unchanged)
+    const newSourceQty = Math.max(0, (Number(prod.stockByWarehouse?.[sourceWh.id]?.quantity) || 0) - qty);
+    const newDestQty = (Number(prod.stockByWarehouse?.[destWh.id]?.quantity) || 0) + qty;
+
+    inventoryService.updateProductStock(prod.id, sourceWh.id, newSourceQty, prod.stockByWarehouse?.[sourceWh.id]?.location);
+    inventoryService.updateProductStock(prod.id, destWh.id, newDestQty, prod.stockByWarehouse?.[destWh.id]?.location);
+
     setProducts((prev) =>
       prev.map((p) => {
         if (p.id !== prod.id) return p;
@@ -563,22 +638,16 @@ export const InventoryProvider = ({ children }) => {
           ...p,
           stockByWarehouse: {
             ...p.stockByWarehouse,
-            [sourceWh.id]: {
-              ...sourceWhStock,
-              quantity: Math.max(0, (Number(sourceWhStock.quantity) || 0) - qty)
-            },
-            [destWh.id]: {
-              ...destWhStock,
-              quantity: (Number(destWhStock.quantity) || 0) + qty
-            }
+            [sourceWh.id]: { ...sourceWhStock, quantity: newSourceQty },
+            [destWh.id]: { ...destWhStock, quantity: newDestQty }
           }
         };
       })
     );
 
     setTransfers((prev) => [newTransfer, ...prev]);
+    inventoryService.saveTransfer(newTransfer);
 
-    // Create Move History entry
     const moveEntry = {
       id: generateId('MOV', moveHistory),
       date: new Date().toISOString(),
@@ -595,6 +664,7 @@ export const InventoryProvider = ({ children }) => {
       notes: transferInput.notes || 'Internal stock relocation'
     };
     setMoveHistory((prev) => [moveEntry, ...prev]);
+    inventoryService.saveMoveHistory(moveEntry);
 
     return { success: true, message: `Transferred ${qty} ${prod.unit} from ${sourceWh.name} to ${destWh.name}` };
   }, [products, warehouses, transfers, moveHistory]);
@@ -632,7 +702,8 @@ export const InventoryProvider = ({ children }) => {
       user: adjustmentInput.user || 'Alex Morgan (Inventory Mgr)'
     };
 
-    // Update Product Stock to exactly match the counted quantity
+    inventoryService.updateProductStock(prod.id, wh.id, countedQty, prod.stockByWarehouse?.[wh.id]?.location);
+
     setProducts((prev) =>
       prev.map((p) => {
         if (p.id !== prod.id) return p;
@@ -641,18 +712,15 @@ export const InventoryProvider = ({ children }) => {
           ...p,
           stockByWarehouse: {
             ...p.stockByWarehouse,
-            [wh.id]: {
-              ...whStock,
-              quantity: countedQty
-            }
+            [wh.id]: { ...whStock, quantity: countedQty }
           }
         };
       })
     );
 
     setAdjustments((prev) => [newAdjustment, ...prev]);
+    inventoryService.saveAdjustment(newAdjustment);
 
-    // Create Move History entry
     const moveEntry = {
       id: generateId('MOV', moveHistory),
       date: new Date().toISOString(),
@@ -669,6 +737,7 @@ export const InventoryProvider = ({ children }) => {
       notes: `${adjustmentInput.reason || 'Physical Count Adjustment'} (${diff >= 0 ? '+' : ''}${diff} ${prod.unit})`
     };
     setMoveHistory((prev) => [moveEntry, ...prev]);
+    inventoryService.saveMoveHistory(moveEntry);
 
     return {
       success: true,
@@ -691,8 +760,8 @@ export const InventoryProvider = ({ children }) => {
     };
 
     setWarehouses((prev) => [...prev, newWarehouse]);
+    inventoryService.saveWarehouse(newWarehouse);
 
-    // Initialize this warehouse in all existing products
     setProducts((prev) =>
       prev.map((prod) => ({
         ...prod,
@@ -711,7 +780,14 @@ export const InventoryProvider = ({ children }) => {
 
   const updateWarehouse = useCallback((id, updatedFields) => {
     setWarehouses((prev) =>
-      prev.map((wh) => (wh.id === id ? { ...wh, ...updatedFields } : wh))
+      prev.map((wh) => {
+        if (wh.id === id) {
+          const updated = { ...wh, ...updatedFields };
+          inventoryService.saveWarehouse(updated);
+          return updated;
+        }
+        return wh;
+      })
     );
   }, []);
 
@@ -740,6 +816,8 @@ export const InventoryProvider = ({ children }) => {
     activeWarehouseId,
     setActiveWarehouseId,
     summary,
+    isSupabaseConnected,
+    isLoadingDB,
     getProductQuantity,
     getProductStatus,
     addProduct,
