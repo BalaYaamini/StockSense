@@ -307,8 +307,12 @@ export const LoginPage = ({ onLoginSuccess }) => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4">
         {/* Brand Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex w-12 h-12 rounded-2xl bg-gradient-to-br from-coral-500 to-rose-600 items-center justify-center text-white shadow-lg shadow-coral-500/30 mb-3">
-            <Boxes className="w-7 h-7" />
+          <div className="inline-flex w-16 h-16 rounded-2xl items-center justify-center mb-3 shadow-md border border-slate-200/80 bg-white p-1.5">
+            <img
+              src="/logo.png"
+              alt="StockSense Logo"
+              className="w-full h-full object-contain rounded-xl"
+            />
           </div>
           <h2 className="text-2xl font-black text-slate-900 tracking-tight">
             Stock<span className="text-coral-500">Sense</span> IMS

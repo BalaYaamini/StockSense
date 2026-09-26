@@ -211,33 +211,33 @@ Liam O'Connor,liam.o@stocksense.io,Logistics Manager,East Coast Distribution,pas
 
       {/* Metric Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="p-4 bg-white dark:bg-[#121212] rounded-2xl border border-slate-200/80 dark:border-[#2a2a2a] shadow-xs">
           <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Users</p>
-          <p className="text-2xl font-extrabold text-slate-900 mt-1">{stats.total}</p>
-          <span className="text-[10px] text-slate-500 mt-0.5 block">Active profiles</span>
+          <p className="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">{stats.total}</p>
+          <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 block">Active profiles</span>
         </div>
 
-        <div className="p-4 bg-white rounded-2xl border border-coral-200/80 shadow-xs">
+        <div className="p-4 bg-white dark:bg-[#121212] rounded-2xl border border-coral-200/80 dark:border-[#2a2a2a] shadow-xs">
           <p className="text-[11px] font-bold uppercase tracking-wider text-coral-600">Managers</p>
           <p className="text-2xl font-extrabold text-coral-600 mt-1">{stats.managers}</p>
-          <span className="text-[10px] text-slate-500 mt-0.5 block">Admin-provisioned</span>
+          <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 block">Admin-provisioned</span>
         </div>
 
-        <div className="p-4 bg-white rounded-2xl border border-indigo-200/80 shadow-xs">
+        <div className="p-4 bg-white dark:bg-[#121212] rounded-2xl border border-indigo-200/80 dark:border-[#2a2a2a] shadow-xs">
           <p className="text-[11px] font-bold uppercase tracking-wider text-indigo-600">Floor Staff</p>
           <p className="text-2xl font-extrabold text-indigo-600 mt-1">{stats.staff}</p>
-          <span className="text-[10px] text-slate-500 mt-0.5 block">Workstation operators</span>
+          <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 block">Workstation operators</span>
         </div>
 
-        <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Google OAuth</p>
-          <p className="text-2xl font-extrabold text-slate-800 mt-1">{stats.googleUsers}</p>
-          <span className="text-[10px] text-slate-500 mt-0.5 block">Defaulted to Staff</span>
+        <div className="p-4 bg-white dark:bg-[#121212] rounded-2xl border border-slate-200/80 dark:border-[#2a2a2a] shadow-xs">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Google OAuth</p>
+          <p className="text-2xl font-extrabold text-slate-800 dark:text-slate-200 mt-1">{stats.googleUsers}</p>
+          <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 block">Defaulted to Staff</span>
         </div>
       </div>
 
       {/* Directory Filter Bar */}
-      <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-card flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="p-4 bg-white dark:bg-[#121212] rounded-2xl border border-slate-200/80 dark:border-[#2a2a2a] shadow-card flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="w-full sm:w-80">
           <Input
             placeholder="Search by user name, email, or title..."
@@ -262,11 +262,11 @@ Liam O'Connor,liam.o@stocksense.io,Logistics Manager,East Coast Distribution,pas
       </div>
 
       {/* Users Table */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card overflow-hidden">
+      <div className="bg-white dark:bg-[#121212] rounded-2xl border border-slate-200/80 dark:border-[#2a2a2a] shadow-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              <tr className="bg-slate-50/80 dark:bg-[#181818] border-b border-slate-200 dark:border-[#2a2a2a] text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 <th className="px-5 py-3.5">User Profile</th>
                 <th className="px-5 py-3.5">Organizational Role</th>
                 <th className="px-5 py-3.5">Authentication Provider</th>
@@ -274,20 +274,20 @@ Liam O'Connor,liam.o@stocksense.io,Logistics Manager,East Coast Distribution,pas
                 <th className="px-5 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-xs">
+            <tbody className="divide-y divide-slate-100 dark:divide-[#2a2a2a] text-xs">
               {filteredUsers.map((u) => (
-                <tr key={u.id} className="hover:bg-slate-50/60 transition-colors">
+                <tr key={u.id} className="hover:bg-slate-50/60 dark:hover:bg-[#1a1a1a] transition-colors">
                   {/* User Profile */}
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className={`w-9 h-9 rounded-full font-bold flex items-center justify-center text-xs flex-shrink-0 border ${
-                        u.avatarBg || 'bg-slate-100 text-slate-700'
+                        u.avatarBg || 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700'
                       }`}>
                         {u.avatar || 'US'}
                       </div>
                       <div>
-                        <p className="font-bold text-slate-900 leading-snug">{u.name}</p>
-                        <p className="text-[11px] text-slate-500 font-mono mt-0.5">{u.email}</p>
+                        <p className="font-bold text-slate-900 dark:text-white leading-snug">{u.name}</p>
+                        <p className="text-[11px] text-slate-400 font-mono mt-0.5">{u.email}</p>
                       </div>
                     </div>
                   </td>
@@ -296,10 +296,10 @@ Liam O'Connor,liam.o@stocksense.io,Logistics Manager,East Coast Distribution,pas
                   <td className="px-5 py-3.5">
                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-bold text-[11px] border ${
                       u.role === 'ADMIN'
-                        ? 'bg-rose-50 text-rose-700 border-rose-200'
+                        ? 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-900'
                         : u.role === 'MANAGER'
-                        ? 'bg-coral-50 text-coral-700 border-coral-200'
-                        : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                        ? 'bg-coral-50 text-coral-700 border-coral-200 dark:bg-coral-950/40 dark:text-coral-300 dark:border-coral-900'
+                        : 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-900'
                     }`}>
                       {u.badge || (u.role === 'ADMIN' ? '👑 Admin' : u.role === 'MANAGER' ? '👔 Manager' : '👷 Staff')}
                     </span>
@@ -311,7 +311,7 @@ Liam O'Connor,liam.o@stocksense.io,Logistics Manager,East Coast Distribution,pas
                   {/* Auth Provider */}
                   <td className="px-5 py-3.5">
                     {u.authProvider === 'google' ? (
-                      <span className="inline-flex items-center gap-1.5 font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                      <span className="inline-flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-[#1a1a1a] px-2 py-0.5 rounded-md border border-slate-200 dark:border-[#2a2a2a]">
                         <svg className="w-3 h-3" viewBox="0 0 24 24">
                           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -321,16 +321,16 @@ Liam O'Connor,liam.o@stocksense.io,Logistics Manager,East Coast Distribution,pas
                         Google Account
                       </span>
                     ) : u.authProvider === 'admin_import' ? (
-                      <span className="inline-flex items-center gap-1 text-slate-600 bg-coral-50/50 text-coral-700 px-2 py-0.5 rounded-md border border-coral-200/50">
+                      <span className="inline-flex items-center gap-1 text-coral-700 dark:text-coral-400 bg-coral-50/50 dark:bg-coral-950/40 px-2 py-0.5 rounded-md border border-coral-200/50 dark:border-coral-800">
                         Admin Imported
                       </span>
                     ) : (
-                      <span className="text-slate-500">Email & Password</span>
+                      <span className="text-slate-500 dark:text-slate-400">Email & Password</span>
                     )}
                   </td>
 
                   {/* Facility */}
-                  <td className="px-5 py-3.5 text-slate-600">
+                  <td className="px-5 py-3.5 text-slate-600 dark:text-slate-300">
                     {u.assignedWarehouse || 'All Facilities'}
                   </td>
 
@@ -340,7 +340,7 @@ Liam O'Connor,liam.o@stocksense.io,Logistics Manager,East Coast Distribution,pas
                       <button
                         onClick={() => setOtpResetUser(u)}
                         title={`Reset Password via OTP for ${u.name}`}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-coral-600 hover:bg-coral-50 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-coral-600 hover:bg-coral-50 dark:hover:bg-coral-950/30 transition-colors cursor-pointer"
                       >
                         <KeyRound className="w-4 h-4" />
                       </button>
@@ -349,7 +349,7 @@ Liam O'Connor,liam.o@stocksense.io,Logistics Manager,East Coast Distribution,pas
                         <button
                           onClick={() => setDeleteTargetId(u.id)}
                           title="Revoke / Delete User"
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

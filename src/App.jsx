@@ -1,34 +1,21 @@
 import React from 'react';
-<<<<<<< HEAD
-import { AuthProvider } from './context/AuthContext';
-=======
 import { ThemeProvider } from './context/ThemeContext';
->>>>>>> followup-changes
-import { InventoryProvider } from './context/InventoryContext';
 import { ToastProvider } from './context/ToastContext';
+import { AuthProvider } from './context/AuthContext';
+import { InventoryProvider } from './context/InventoryContext';
 import { MainLayout } from './components/layout/MainLayout';
 
 function App() {
   return (
-<<<<<<< HEAD
-    <ToastProvider>
-      <AuthProvider>
-        <InventoryProvider>
-          <MainLayout />
-        </InventoryProvider>
-      </AuthProvider>
-    </ToastProvider>
-=======
     <ThemeProvider>
       <ToastProvider>
-        <RoleProvider>
+        <AuthProvider>
           <InventoryProvider>
             <MainLayout />
           </InventoryProvider>
-        </RoleProvider>
+        </AuthProvider>
       </ToastProvider>
     </ThemeProvider>
->>>>>>> followup-changes
   );
 }
 
