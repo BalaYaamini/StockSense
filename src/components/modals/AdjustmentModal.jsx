@@ -162,14 +162,14 @@ export const AdjustmentModal = ({
         </div>
 
         {/* System Stock vs Counted Stock */}
-        <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+        <div className="p-4 bg-slate-50 dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#2a2a2a] rounded-xl space-y-3">
           <div className="grid grid-cols-2 gap-4 items-center">
-            <div className="p-3 bg-white border border-slate-200 rounded-lg text-center">
-              <span className="text-[11px] uppercase font-bold text-slate-500 tracking-wider block mb-1">
+            <div className="p-3 bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#2a2a2a] rounded-lg text-center">
+              <span className="text-[11px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider block mb-1">
                 System On-Hand Stock
               </span>
-              <span className="text-2xl font-black text-slate-800">
-                {systemQuantity} <span className="text-sm font-normal text-slate-500">{selectedProduct?.unit}</span>
+              <span className="text-2xl font-black text-slate-800 dark:text-white">
+                {systemQuantity} <span className="text-sm font-normal text-slate-500 dark:text-slate-400">{selectedProduct?.unit}</span>
               </span>
             </div>
 
@@ -193,7 +193,7 @@ export const AdjustmentModal = ({
               ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
               : diff < 0
               ? 'bg-rose-50 border-rose-200 text-rose-800'
-              : 'bg-slate-100 border-slate-200 text-slate-700'
+              : 'bg-slate-100 dark:bg-[#1a1a1a] border-slate-200 dark:border-[#2a2a2a] text-slate-700 dark:text-slate-200'
           }`}>
             <span className="flex items-center gap-1.5">
               {diff > 0 ? (
@@ -235,7 +235,7 @@ export const AdjustmentModal = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-[#2a2a2a]">
           <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>

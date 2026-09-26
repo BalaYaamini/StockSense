@@ -33,31 +33,31 @@ export const BarcodeLabelModal = ({
         {/* Printable Label Preview Card */}
         <div
           ref={printRef}
-          className="p-6 bg-white border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center text-center space-y-3 shadow-sm print:border-none print:shadow-none"
+          className="p-6 bg-white dark:bg-[#1a1a1a] border-2 border-dashed border-slate-300 dark:border-[#2a2a2a] rounded-2xl flex flex-col items-center text-center space-y-3 shadow-sm print:border-none print:shadow-none"
         >
-          <div className="w-full flex items-center justify-between border-b pb-2 border-slate-200 text-left">
+          <div className="w-full flex items-center justify-between border-b pb-2 border-slate-200 dark:border-[#2a2a2a] text-left">
             <div>
-              <span className="font-extrabold text-xs tracking-tight text-slate-900">
-                Stock<span className="text-coral-500">Sense</span> IMS
+              <span className="font-extrabold text-xs tracking-tight text-slate-900 dark:text-white">
+                Stock<span className="text-sage-500">Sense</span> IMS
               </span>
-              <p className="text-[10px] text-slate-500">{product.category}</p>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400">{product.category}</p>
             </div>
-            <span className="text-xs font-bold text-slate-900 font-mono">
+            <span className="text-xs font-bold text-slate-900 dark:text-white font-mono">
               {formatCurrency(product.unitPrice)}
             </span>
           </div>
 
           <div>
-            <h4 className="font-extrabold text-base text-slate-900 leading-tight">
+            <h4 className="font-extrabold text-base text-slate-900 dark:text-white leading-tight">
               {product.name}
             </h4>
-            <p className="text-xs font-mono font-bold text-slate-700 tracking-wider mt-1">
+            <p className="text-xs font-mono font-bold text-slate-700 dark:text-slate-200 tracking-wider mt-1">
               SKU: {product.sku}
             </p>
           </div>
 
           {/* Realistic SVG Barcode Representation */}
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 w-full flex flex-col items-center">
+          <div className="p-3 bg-slate-50 dark:bg-[#1a1a1a] rounded-xl border border-slate-200 dark:border-[#2a2a2a] w-full flex flex-col items-center">
             <svg
               className="w-full h-14"
               viewBox="0 0 200 60"
@@ -100,14 +100,14 @@ export const BarcodeLabelModal = ({
             </svg>
           </div>
 
-          <div className="w-full flex items-center justify-between text-[11px] text-slate-500 pt-1">
+          <div className="w-full flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-1">
             <span>Reorder Point: {product.reorderLevel} {product.unit}</span>
             <span>Unit: {product.unit}</span>
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-[#2a2a2a]">
           <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>

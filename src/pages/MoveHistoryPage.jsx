@@ -92,8 +92,8 @@ export const MoveHistoryPage = () => {
       key: 'date',
       render: (val) => (
         <div className="text-xs">
-          <span className="font-semibold text-slate-800 block">{formatDateTime(val)}</span>
-          <span className="font-mono text-[10px] text-slate-400">Ledger Entry</span>
+          <span className="font-semibold text-slate-800 dark:text-slate-200 block">{formatDateTime(val)}</span>
+          <span className="font-mono text-[10px] text-slate-400 dark:text-slate-500">Ledger Entry</span>
         </div>
       )
     },
@@ -107,8 +107,8 @@ export const MoveHistoryPage = () => {
       key: 'productName',
       render: (val, row) => (
         <div>
-          <p className="font-bold text-slate-900 text-xs">{val}</p>
-          <span className="font-mono text-[11px] text-slate-400">{row.sku}</span>
+          <p className="font-bold text-slate-900 dark:text-white text-xs">{val}</p>
+          <span className="font-mono text-[11px] text-slate-400 dark:text-slate-500">{row.sku}</span>
         </div>
       )
     },
@@ -127,7 +127,7 @@ export const MoveHistoryPage = () => {
               ? 'text-emerald-700 bg-emerald-50 border border-emerald-200/60'
               : isNeg
               ? 'text-rose-700 bg-rose-50 border border-rose-200/60'
-              : 'text-slate-700 bg-slate-100'
+              : 'text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-[#1a1a1a]'
           }`}>
             {row.type === 'TRANSFER' ? '⇄ ' : isPos ? '+' : ''}
             {formatNumber(val)} {row.unit}
@@ -140,12 +140,12 @@ export const MoveHistoryPage = () => {
       key: 'source',
       render: (val, row) => (
         <div className="text-xs min-w-[200px]">
-          <div className="flex items-center gap-1.5 text-slate-600">
-            <span className="text-slate-400 text-[10px] uppercase font-bold">From:</span>
+          <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+            <span className="text-slate-400 dark:text-slate-500 text-[10px] uppercase font-bold">From:</span>
             <span className="font-medium truncate">{val}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-slate-900 font-semibold mt-0.5">
-            <span className="text-slate-400 text-[10px] uppercase font-bold">To:</span>
+          <div className="flex items-center gap-1.5 text-slate-900 dark:text-white font-semibold mt-0.5">
+            <span className="text-slate-400 dark:text-slate-500 text-[10px] uppercase font-bold">To:</span>
             <span className="truncate">{row.destination}</span>
           </div>
         </div>
@@ -155,7 +155,7 @@ export const MoveHistoryPage = () => {
       header: 'Operator / Staff',
       key: 'user',
       render: (val) => (
-        <span className="text-xs text-slate-600 font-medium">
+        <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
           {val || 'System'}
         </span>
       )
@@ -167,8 +167,8 @@ export const MoveHistoryPage = () => {
       headerAlign: 'right',
       render: (val, row) => (
         <div className="text-right text-xs">
-          <span className="font-mono font-bold text-slate-800">{val}</span>
-          {row.notes && <p className="text-[10px] text-slate-400 truncate max-w-[140px] ml-auto">{row.notes}</p>}
+          <span className="font-mono font-bold text-slate-800 dark:text-white">{val}</span>
+          {row.notes && <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate max-w-[140px] ml-auto">{row.notes}</p>}
         </div>
       )
     }
@@ -179,10 +179,10 @@ export const MoveHistoryPage = () => {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
             Inventory Ledger & Move History
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Immutable audit trail of all receipts, deliveries, internal transfers, and physical counts
           </p>
         </div>
@@ -191,14 +191,14 @@ export const MoveHistoryPage = () => {
           variant="secondary"
           icon={FileSpreadsheet}
           onClick={handleExportCSV}
-          className="self-start sm:self-auto text-slate-700 bg-white hover:bg-slate-50 border-slate-200"
+          className="self-start sm:self-auto text-slate-700 dark:text-slate-300 bg-white dark:bg-[#121212] hover:bg-slate-50 dark:hover:bg-[#1a1a1a] border-slate-200 dark:border-[#2a2a2a]"
         >
           Export CSV Ledger
         </Button>
       </div>
 
       {/* Filter Controls */}
-      <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-card flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+      <div className="p-4 bg-white dark:bg-[#121212] rounded-2xl border border-slate-200/80 dark:border-[#2a2a2a] shadow-card flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
         {/* Search */}
         <div className="flex-1 min-w-[240px]">
           <Input
@@ -249,7 +249,7 @@ export const MoveHistoryPage = () => {
                 setSelectedType('ALL');
                 setSelectedProductId('ALL');
               }}
-              className="text-slate-500 hover:text-slate-800 text-xs"
+              className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-xs"
             >
               Clear
             </Button>

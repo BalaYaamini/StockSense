@@ -7,7 +7,7 @@ export const ROLES = {
     roleTitle: 'Inventory Manager',
     badge: 'Manager View',
     avatar: 'AM',
-    avatarBg: 'bg-coral-100 text-coral-700 border-coral-200'
+    avatarBg: 'bg-sage-100 text-sage-700 border-sage-200'
   },
   STAFF: {
     id: 'STAFF',

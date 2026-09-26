@@ -228,23 +228,23 @@ export const DeliveryModal = ({
         </div>
 
         {/* Immediate validation checkbox */}
-        <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+        <div className="p-3.5 bg-slate-50 dark:bg-[#1a1a1a] rounded-xl border border-slate-200 dark:border-[#2a2a2a] flex items-center justify-between">
           <label className="flex items-center gap-2.5 cursor-pointer select-none">
             <input
               type="checkbox"
               name="validateImmediately"
               checked={formData.validateImmediately}
               onChange={handleChange}
-              className="w-4 h-4 text-coral-600 rounded border-slate-300 focus:ring-coral-500 cursor-pointer"
+              className="w-4 h-4 text-sage-600 rounded border-slate-300 focus:ring-sage-500 cursor-pointer"
             />
-            <span className="text-xs font-semibold text-slate-800">
+            <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
               Validate & dispatch immediately (deduct stock)
             </span>
           </label>
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-[#2a2a2a]">
           <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>

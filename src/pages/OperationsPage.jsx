@@ -106,23 +106,23 @@ export const OperationsPage = ({
       key: 'id',
       render: (val, row) => (
         <div>
-          <span className="font-mono font-bold text-slate-900 text-xs">{val}</span>
-          {row.notes && <p className="text-[11px] text-slate-400 truncate max-w-[180px]">{row.notes}</p>}
+          <span className="font-mono font-bold text-slate-900 dark:text-white text-xs">{val}</span>
+          {row.notes && <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate max-w-[180px]">{row.notes}</p>}
         </div>
       )
     },
     {
       header: 'Supplier',
       key: 'supplier',
-      render: (val) => <span className="font-semibold text-slate-800 text-xs">{val}</span>
+      render: (val) => <span className="font-semibold text-slate-800 dark:text-slate-200 text-xs">{val}</span>
     },
     {
       header: 'Product',
       key: 'productName',
       render: (val, row) => (
         <div>
-          <p className="font-bold text-slate-900 text-xs">{val}</p>
-          <span className="font-mono text-[11px] text-slate-400">{row.sku}</span>
+          <p className="font-bold text-slate-900 dark:text-white text-xs">{val}</p>
+          <span className="font-mono text-[11px] text-slate-400 dark:text-slate-500">{row.sku}</span>
         </div>
       )
     },
@@ -140,8 +140,8 @@ export const OperationsPage = ({
       key: 'warehouseName',
       render: (val, row) => (
         <div className="text-xs">
-          <span className="font-medium text-slate-800 block">{val}</span>
-          <span className="text-[11px] text-slate-400">{row.location || 'Receiving Bay'}</span>
+          <span className="font-medium text-slate-800 dark:text-slate-200 block">{val}</span>
+          <span className="text-[11px] text-slate-400 dark:text-slate-500">{row.location || 'Receiving Bay'}</span>
         </div>
       )
     },
@@ -149,7 +149,7 @@ export const OperationsPage = ({
       header: 'Scheduled Date',
       key: 'scheduledDate',
       render: (val) => (
-        <span className="text-xs text-slate-600 font-medium">
+        <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
           {formatDate(val)}
         </span>
       )
@@ -167,7 +167,7 @@ export const OperationsPage = ({
       render: (_, row) => {
         if (row.status === 'DONE') {
           return (
-            <span className="text-[11px] text-slate-400 italic">
+            <span className="text-[11px] text-slate-400 dark:text-slate-500 italic">
               Completed {row.completedDate ? formatDate(row.completedDate) : ''}
             </span>
           );
@@ -191,7 +191,7 @@ export const OperationsPage = ({
               variant="ghost"
               size="icon-sm"
               onClick={() => handleCancelReceipt(row.id)}
-              className="text-slate-400 hover:text-rose-600"
+              className="text-slate-400 dark:text-slate-500 hover:text-rose-600"
               title="Cancel Receipt"
             >
               <XCircle className="w-4 h-4" />
@@ -209,23 +209,23 @@ export const OperationsPage = ({
       key: 'id',
       render: (val, row) => (
         <div>
-          <span className="font-mono font-bold text-slate-900 text-xs">{val}</span>
-          {row.notes && <p className="text-[11px] text-slate-400 truncate max-w-[180px]">{row.notes}</p>}
+          <span className="font-mono font-bold text-slate-900 dark:text-white text-xs">{val}</span>
+          {row.notes && <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate max-w-[180px]">{row.notes}</p>}
         </div>
       )
     },
     {
       header: 'Customer',
       key: 'customer',
-      render: (val) => <span className="font-semibold text-slate-800 text-xs">{val}</span>
+      render: (val) => <span className="font-semibold text-slate-800 dark:text-slate-200 text-xs">{val}</span>
     },
     {
       header: 'Product',
       key: 'productName',
       render: (val, row) => (
         <div>
-          <p className="font-bold text-slate-900 text-xs">{val}</p>
-          <span className="font-mono text-[11px] text-slate-400">{row.sku}</span>
+          <p className="font-bold text-slate-900 dark:text-white text-xs">{val}</p>
+          <span className="font-mono text-[11px] text-slate-400 dark:text-slate-500">{row.sku}</span>
         </div>
       )
     },
@@ -241,13 +241,13 @@ export const OperationsPage = ({
     {
       header: 'Source Warehouse',
       key: 'warehouseName',
-      render: (val) => <span className="text-xs font-medium text-slate-800">{val}</span>
+      render: (val) =>         <span className="text-xs font-medium text-slate-800 dark:text-slate-200">{val}</span>
     },
     {
       header: 'Scheduled Date',
       key: 'scheduledDate',
       render: (val) => (
-        <span className="text-xs text-slate-600 font-medium">
+        <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
           {formatDate(val)}
         </span>
       )
@@ -265,7 +265,7 @@ export const OperationsPage = ({
       render: (_, row) => {
         if (row.status === 'DONE') {
           return (
-            <span className="text-[11px] text-slate-400 italic">
+            <span className="text-[11px] text-slate-400 dark:text-slate-500 italic">
               Dispatched {row.completedDate ? formatDate(row.completedDate) : ''}
             </span>
           );
@@ -289,7 +289,7 @@ export const OperationsPage = ({
               variant="ghost"
               size="icon-sm"
               onClick={() => handleCancelDelivery(row.id)}
-              className="text-slate-400 hover:text-rose-600"
+              className="text-slate-400 dark:text-slate-500 hover:text-rose-600"
               title="Cancel Delivery"
             >
               <XCircle className="w-4 h-4" />
@@ -305,15 +305,15 @@ export const OperationsPage = ({
     {
       header: 'Transfer ID',
       key: 'id',
-      render: (val) => <span className="font-mono font-bold text-slate-900 text-xs">{val}</span>
+      render: (val) => <span className="font-mono font-bold text-slate-900 dark:text-white text-xs">{val}</span>
     },
     {
       header: 'Product',
       key: 'productName',
       render: (val, row) => (
         <div>
-          <p className="font-bold text-slate-900 text-xs">{val}</p>
-          <span className="font-mono text-[11px] text-slate-400">{row.sku}</span>
+          <p className="font-bold text-slate-900 dark:text-white text-xs">{val}</p>
+          <span className="font-mono text-[11px] text-slate-400 dark:text-slate-500">{row.sku}</span>
         </div>
       )
     },
@@ -329,17 +329,17 @@ export const OperationsPage = ({
     {
       header: 'Source (From)',
       key: 'sourceWarehouseName',
-      render: (val) => <span className="text-xs font-semibold text-slate-700">{val}</span>
+      render: (val) => <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{val}</span>
     },
     {
       header: 'Destination (To)',
       key: 'destWarehouseName',
-      render: (val) => <span className="text-xs font-semibold text-slate-900">{val}</span>
+      render: (val) => <span className="text-xs font-semibold text-slate-900 dark:text-white">{val}</span>
     },
     {
       header: 'Date',
       key: 'date',
-      render: (val) => <span className="text-xs text-slate-500">{formatDate(val)}</span>
+      render: (val) => <span className="text-xs text-slate-500 dark:text-slate-400">{formatDate(val)}</span>
     },
     {
       header: 'Status',
@@ -353,29 +353,29 @@ export const OperationsPage = ({
     {
       header: 'Adjustment ID',
       key: 'id',
-      render: (val) => <span className="font-mono font-bold text-slate-900 text-xs">{val}</span>
+      render: (val) => <span className="font-mono font-bold text-slate-900 dark:text-white text-xs">{val}</span>
     },
     {
       header: 'Product',
       key: 'productName',
       render: (val, row) => (
         <div>
-          <p className="font-bold text-slate-900 text-xs">{val}</p>
-          <span className="font-mono text-[11px] text-slate-400">{row.sku}</span>
+          <p className="font-bold text-slate-900 dark:text-white text-xs">{val}</p>
+          <span className="font-mono text-[11px] text-slate-400 dark:text-slate-500">{row.sku}</span>
         </div>
       )
     },
     {
       header: 'Warehouse',
       key: 'warehouseName',
-      render: (val) => <span className="text-xs font-medium text-slate-800">{val}</span>
+      render: (val) => <span className="text-xs font-medium text-slate-800 dark:text-slate-200">{val}</span>
     },
     {
       header: 'System → Counted',
       key: 'countedQuantity',
       render: (val, row) => (
-        <span className="text-xs font-semibold text-slate-700">
-          {row.systemQuantity} → <strong className="text-slate-900 font-bold">{val}</strong> {row.unit}
+        <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+          {row.systemQuantity} → <strong className="text-slate-900 dark:text-white font-bold">{val}</strong> {row.unit}
         </span>
       )
     },
@@ -388,7 +388,7 @@ export const OperationsPage = ({
             ? 'text-emerald-700 bg-emerald-50'
             : val < 0
             ? 'text-rose-700 bg-rose-50'
-            : 'text-slate-600 bg-slate-100'
+            : 'text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-[#1a1a1a]'
         }`}>
           {val > 0 ? `+${val}` : val} {row.unit}
         </span>
@@ -397,15 +397,15 @@ export const OperationsPage = ({
     {
       header: 'Reason',
       key: 'reason',
-      render: (val) => <span className="text-xs text-slate-600">{val}</span>
+      render: (val) => <span className="text-xs text-slate-600 dark:text-slate-400">{val}</span>
     },
     {
       header: 'Date / Staff',
       key: 'date',
       render: (val, row) => (
         <div className="text-xs">
-          <span className="text-slate-600 block">{formatDate(val)}</span>
-          <span className="text-[11px] text-slate-400">{row.user}</span>
+          <span className="text-slate-600 dark:text-slate-400 block">{formatDate(val)}</span>
+          <span className="text-[11px] text-slate-400 dark:text-slate-500">{row.user}</span>
         </div>
       )
     }
@@ -416,10 +416,10 @@ export const OperationsPage = ({
       {/* Header and Add Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
             Inventory Operations Hub
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Execute receipts, outbound delivery dispatches, transfers, and inventory audits
           </p>
         </div>
@@ -430,7 +430,7 @@ export const OperationsPage = ({
               variant="primary"
               icon={Plus}
               onClick={() => onOpenReceiptModal()}
-              className="coral-glow"
+              className="sage-glow"
             >
               Add Receipt
             </Button>
@@ -441,7 +441,7 @@ export const OperationsPage = ({
               variant="primary"
               icon={Plus}
               onClick={() => onOpenDeliveryModal()}
-              className="coral-glow"
+              className="sage-glow"
             >
               Add Delivery
             </Button>
@@ -452,7 +452,7 @@ export const OperationsPage = ({
               variant="primary"
               icon={Plus}
               onClick={() => onOpenTransferModal()}
-              className="coral-glow"
+              className="sage-glow"
             >
               New Transfer
             </Button>
@@ -463,7 +463,7 @@ export const OperationsPage = ({
               variant="primary"
               icon={Plus}
               onClick={() => onOpenAdjustmentModal()}
-              className="coral-glow"
+              className="sage-glow"
             >
               New Adjustment
             </Button>

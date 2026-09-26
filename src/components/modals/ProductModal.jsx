@@ -213,12 +213,12 @@ export const ProductModal = ({
 
         {/* Row 3: Initial Stock & Location (Only for Add mode) */}
         {!isEdit && (
-          <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-xl space-y-3">
+          <div className="p-4 bg-slate-50 dark:bg-[#1a1a1a] border border-slate-200/80 dark:border-[#2a2a2a] rounded-xl space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase text-slate-700 tracking-wider">
+              <span className="text-xs font-bold uppercase text-slate-700 dark:text-slate-200 tracking-wider">
                 Initial Stock Placement
               </span>
-              <span className="text-[11px] text-slate-500">Will be logged in Move History</span>
+              <span className="text-[11px] text-slate-500 dark:text-slate-400">Will be logged in Move History</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -295,7 +295,7 @@ export const ProductModal = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-[#2a2a2a]">
           <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>

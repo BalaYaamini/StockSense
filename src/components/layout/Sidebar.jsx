@@ -97,7 +97,7 @@ export const Sidebar = ({
       id: 'operations',
       label: 'Operations',
       icon: Layers,
-      badge: totalPendingOperations > 0 ? { text: totalPendingOperations, color: 'bg-coral-500 text-white' } : null
+      badge: totalPendingOperations > 0 ? { text: totalPendingOperations, color: 'bg-sage-500 text-white' } : null
     },
     {
       id: 'staff-workstation',
@@ -155,24 +155,29 @@ export const Sidebar = ({
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-40 w-64 bg-white border-r border-slate-200/80 flex flex-col justify-between transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-40 w-64 bg-white dark:bg-[#121212] border-r border-slate-200/80 dark:border-[#2a2a2a] flex flex-col justify-between transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col flex-1 overflow-y-auto">
           {/* Brand Logo Header */}
-          <div className="h-16 flex items-center justify-between px-6 border-b border-slate-100">
+          <div className="h-16 flex items-center justify-between px-6 border-b border-slate-100 dark:border-[#2a2a2a]">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-coral-500 to-rose-600 flex items-center justify-center text-white shadow-md shadow-coral-500/20">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sage-500 to-rose-600 flex items-center justify-center text-white shadow-md shadow-sage-500/20">
                 <Boxes className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-base tracking-tight text-slate-900">
-                    Stock<span className="text-coral-500">Sense</span>
+                  <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-white">
+                    Stock<span className="text-sage-500">Sense</span>
                   </span>
+<<<<<<< HEAD
                   <span className="text-[10px] font-bold px-1.5 py-0.2 bg-coral-50 text-coral-600 rounded border border-coral-200/50 uppercase tracking-widest">
                     v2.5
+=======
+                  <span className="text-[10px] font-bold px-1.5 py-0.2 bg-sage-50 text-sage-600 rounded border border-sage-200/50 uppercase tracking-widest">
+                    v2.0
+>>>>>>> origin/main
                   </span>
                 </div>
                 <p className="text-[10px] text-slate-400 font-medium tracking-wide">
@@ -183,7 +188,7 @@ export const Sidebar = ({
           </div>
 
           {/* Warehouse Facility Scope Selector */}
-          <div className="px-4 py-3 border-b border-slate-100 bg-slate-50/50">
+          <div className="px-4 py-3 border-b border-slate-100 dark:border-[#2a2a2a] bg-slate-50/50 dark:bg-[#1a1a1a]">
             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
               Active Facility Scope
             </label>
@@ -191,7 +196,7 @@ export const Sidebar = ({
               <select
                 value={activeWarehouseId}
                 onChange={(e) => setActiveWarehouseId(e.target.value)}
-                className="w-full text-xs font-semibold bg-white border border-slate-200 rounded-xl px-2.5 py-2 pr-7 text-slate-800 focus:outline-none focus:ring-1 focus:ring-coral-500 cursor-pointer shadow-xs appearance-none"
+                className="w-full text-xs font-semibold bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#2a2a2a] rounded-xl px-2.5 py-2 pr-7 text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-sage-500 cursor-pointer shadow-xs appearance-none"
               >
                 <option value="ALL">🏢 All Facilities (Consolidated)</option>
                 {warehouses.map((wh) => (
@@ -212,12 +217,17 @@ export const Sidebar = ({
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                 {isAdmin ? 'Admin Portal' : isManager ? 'Manager Menu' : 'Staff Workstation'}
               </span>
+<<<<<<< HEAD
               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
                 isAdmin
                   ? 'bg-rose-50 text-rose-700 border-rose-200'
                   : isManager
                   ? 'bg-coral-50 text-coral-600 border-coral-200'
                   : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+=======
+              <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${
+                isManager ? 'bg-sage-50 dark:bg-sage-900/30 text-sage-600 dark:text-sage-400' : 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400'
+>>>>>>> origin/main
               }`}>
                 {user?.badge || (isAdmin ? '👑 Admin' : isManager ? '👔 Manager' : '👷 Staff')}
               </span>
@@ -236,22 +246,34 @@ export const Sidebar = ({
                   }}
                   className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all group select-none ${
                     isActive
+<<<<<<< HEAD
                       ? isAdmin && item.id === 'user-management'
                         ? 'bg-rose-50 text-rose-700 shadow-xs font-bold'
                         : isStaff
                         ? 'bg-indigo-50 text-indigo-700 shadow-xs'
                         : 'bg-coral-50 text-coral-600 shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+=======
+                      ? isStaff
+                        ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 shadow-xs'
+                        : 'bg-sage-50 dark:bg-sage-900/30 text-sage-600 dark:text-sage-400 shadow-xs'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#1a1a1a]'
+>>>>>>> origin/main
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <Icon
                       className={`w-4 h-4 transition-colors ${
                         isActive
+<<<<<<< HEAD
                           ? isAdmin && item.id === 'user-management'
                             ? 'text-rose-600'
                             : isStaff ? 'text-indigo-600' : 'text-coral-600'
                           : 'text-slate-400 group-hover:text-slate-600'
+=======
+                          ? isStaff ? 'text-indigo-600' : 'text-sage-600'
+                          : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-white'
+>>>>>>> origin/main
                       }`}
                     />
                     <span>{item.label}</span>
@@ -274,7 +296,7 @@ export const Sidebar = ({
                 if (setIsMobileOpen) setIsMobileOpen(false);
                 onOpenScanner();
               }}
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all select-none"
+              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#1a1a1a] transition-all select-none"
             >
               <ScanLine className="w-4 h-4 text-slate-400" />
               <span>Camera Barcode Scan</span>
@@ -283,7 +305,7 @@ export const Sidebar = ({
 
           {/* Phase 2 Auth Status Banner */}
           <div className="mt-auto p-3.5 mx-3 mb-2 bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-2xl shadow-sm">
-            <div className="flex items-center gap-2 text-xs font-bold mb-1 text-coral-300">
+            <div className="flex items-center gap-2 text-xs font-bold mb-1 text-sage-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>Google & Supabase Auth</span>
             </div>
@@ -293,8 +315,13 @@ export const Sidebar = ({
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* User Profile & Logout */}
         <div className="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/60">
+=======
+        {/* User Profile & Role Switcher */}
+        <div className="p-4 border-t border-slate-100 dark:border-[#2a2a2a] flex items-center justify-between bg-slate-50/60 dark:bg-[#1a1a1a]">
+>>>>>>> followup-changes
           <div className="flex items-center gap-3 min-w-0">
             <div className={`w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs flex-shrink-0 border ${
               user?.avatarBg || 'bg-rose-100 text-rose-700 border-rose-200'
@@ -302,20 +329,39 @@ export const Sidebar = ({
               {user?.avatar || (isAdmin ? 'SV' : isManager ? 'AM' : 'DM')}
             </div>
             <div className="min-w-0">
+<<<<<<< HEAD
               <p className="text-xs font-bold text-slate-900 truncate">
+<<<<<<< HEAD
                 {user?.name || 'Administrator'}
               </p>
               <p className="text-[10px] text-slate-500 truncate flex items-center gap-1">
                 {isAdmin ? <Crown className="w-3 h-3 text-amber-500" /> : <ShieldCheck className="w-3 h-3 text-emerald-600" />}
                 {user?.roleTitle || (isAdmin ? 'System Administrator' : isManager ? 'Inventory Manager' : 'Warehouse Staff')}
+=======
+                {user?.name || (isManager ? 'Alex Morgan' : 'Dave Miller')}
+=======
+              <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                {roleInfo.name}
+>>>>>>> followup-changes
+              </p>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                {user?.roleTitle || (isManager ? 'Inventory Manager' : 'Warehouse Staff')}
+>>>>>>> origin/main
               </p>
             </div>
           </div>
 
           <button
+<<<<<<< HEAD
             onClick={logout}
             title="Sign Out"
             className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 transition-colors"
+=======
+            onClick={() => switchRole(isManager ? 'STAFF' : 'MANAGER')}
+            title="Switch User Role"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-[#2a2a2a] transition-colors"
+>>>>>>> followup-changes
           >
             <LogOut className="w-4 h-4" />
           </button>
